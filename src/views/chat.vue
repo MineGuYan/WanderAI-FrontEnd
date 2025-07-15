@@ -7,6 +7,7 @@ import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import type {HistoryChat, message, StreamResult, HistoryMessage} from "../model/model.ts";
+import {ElMessageBox} from "element-plus";
 
 let sessionId: string
 let chatting: boolean = false
@@ -192,8 +193,16 @@ function showFeedback() {
 }
 
 function logout() {
-  localStorage.removeItem('token')
-  window.location.href = '/'
+  ElMessageBox.confirm('确定要退出登录吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  }).catch(() => {
+    console.log('用户取消退出');
+  });
 }
 
 onMounted(() => {
