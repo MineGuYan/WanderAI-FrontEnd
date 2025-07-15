@@ -1,0 +1,86 @@
+{
+  "id": "4967069",
+  "name": "Agent",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "34452959",
+      "name": "atm-fill",
+      "font_class": "atm-fill",
+      "unicode": "e837",
+      "unicode_decimal": 59447
+    },
+    {
+      "icon_id": "1239930",
+      "name": "加载",
+      "font_class": "jiazai",
+      "unicode": "e699",
+      "unicode_decimal": 59033
+    },
+    {
+      "icon_id": "34452958",
+      "name": "atm-away-fill",
+      "font_class": "atm-away-fill",
+      "unicode": "e836",
+      "unicode_decimal": 59446
+    },
+    {
+      "icon_id": "6626202",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "4320365",
+      "name": "重新试样",
+      "font_class": "zhongxinshiyang",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "10933419",
+      "name": "终止",
+      "font_class": "zhongzhi",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "11759966",
+      "name": "对话框",
+      "font_class": "duihuakuang",
+      "unicode": "e7c1",
+      "unicode_decimal": 59329
+    },
+    {
+      "icon_id": "12568670",
+      "name": "箭头",
+      "font_class": "jiantou2-copy-copy",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "17583205",
+      "name": "ai",
+      "font_class": "ai",
+      "unicode": "ec96",
+      "unicode_decimal": 60566
+    },
+    {
+      "icon_id": "43380312",
+      "name": "收起侧边栏",
+      "font_class": "shouqicebianlan",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
+    },
+    {
+      "icon_id": "43380313",
+      "name": "展开侧边栏",
+      "font_class": "zhankaicebianlan",
+      "unicode": "e6f0",
+      "unicode_decimal": 59120
+    }
+  ]
+}
