@@ -38,11 +38,6 @@ onMounted(() => {
 
 <template>
   <div class="home-container">
-    <div class="teammate">
-      <span class="iconfont icon-atm-fill"></span>
-      <span class="team">研发团队：捉虫大队</span>
-    </div>
-
     <!-- 新增的更新公告文字 -->
     <p class="update-notice">
       <span
@@ -75,6 +70,12 @@ onMounted(() => {
         开始对话
         <p class="description">与各种大模型免费对话，体验全新聊天模型</p>
       </router-link>
+    </div>
+
+    <!-- 将teammate移动到chat-box下面 -->
+    <div class="teammate">
+      <span class="iconfont icon-atm-fill"></span>
+      <span class="team">研发团队：捉虫大队</span>
     </div>
   </div>
 </template>
@@ -129,7 +130,7 @@ onMounted(() => {
 
 /* 新增的更新公告文字样式 */
 .update-notice {
-  font-size: 36px;
+  font-size: 32px;
   text-align: center;
   margin: 25px 0 20px 0;
   font-weight: 500;
@@ -145,20 +146,20 @@ onMounted(() => {
 
 .iconfont.icon-ai {
   margin-top:5px;
-  font-size: 48px;
+  font-size: 40px;
   color: #2e95df;
 }
 
 .title {
   color: #0a92ef;
-  font-size: 40px;
+  font-size: 32px;
   font-weight: bold;
   margin: 0;
 }
 
 .sub_title {
   color: #0e0b0b;
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
   margin-top: 25px;
 }
@@ -169,31 +170,32 @@ onMounted(() => {
   width: 100%;
   display: flex;
   color: #ec3939;
-  font-size: 28px;
+  font-size: 24px;
   text-align: center;
-  margin-top: 30px;
+  margin-top: 15px;
   justify-content: center;
   font-weight: bold;
 }
 
 /* 蓝色框样式 */
 .chat-box {
-  margin: 520px auto;
-  padding: 30px;
+  margin: 300px 0 0 0;
+  padding: 10px;
   text-align: center;
 }
 
 .button {
+  /*改为相对位置*/
+  position: relative;
   max-width: 400px;
   display: inline-block;
-  padding: 20px 30px;
+  padding: 10px 20px;
   color: #078eef;
   text-decoration: none;
   border-radius: 15px;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: bold;
   transition: all 0.3s;
-  margin-bottom: 15px;
 
   background-color: rgba(255, 255, 255, 0.1);
   /*改为更透明的白色，让背景图片能够更多地透过chat-box显示*/
@@ -212,22 +214,19 @@ onMounted(() => {
 
 .description {
   color: #666;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.5;
   margintop: 12px;
 }
 
 .teammate {
   color: #f42929;
-  font-size: 26px;
+  font-size: 20px;
   display: flex;
-  position: fixed;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  /*使用left: 50%将元素的左边缘定位到页面中心
-    使用transform: translateX(-50%)将元素向左偏移自身宽度的50%，实现完美居中*/
-  /* 确保元素在其他内容之上显示 */
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 0 0;
+  text-align: center;
   z-index: 1000;
 }
 
