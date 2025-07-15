@@ -81,6 +81,16 @@ async function login() {
   </div>
 </template>
 
+<style>
+/* 全局样式，禁止页面滚动 */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+</style>
+
 <style scoped>
 .login-container {
   display: flex;
@@ -91,19 +101,17 @@ async function login() {
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-form {
   max-width: 400px;
-  max-height: 400px;
-  width: 40%;
+  width: 90%;
   padding: 40px;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
-  position: relative;
-  margin-top:80px;
-  margin-left:100px;
   z-index: 2;
   transform: scale(0.8);
   /*添加transform属性，使登录表单在加载时缩小到80%*/
