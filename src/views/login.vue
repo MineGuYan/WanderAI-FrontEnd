@@ -16,6 +16,7 @@ watch(userid, (newValue) => {
 
   if (newValue.length > 20) {
     userid.value = newValue.slice(0, 20);
+    alert("账号不能超过20个字符");
   }
 });
 
