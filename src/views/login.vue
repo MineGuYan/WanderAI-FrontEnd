@@ -98,7 +98,6 @@ body, html {
   width: 100vw;
   background-image: url('../assets/img/loginback1.png');
   background-size: cover;
-  background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   justify-content: center;
@@ -106,6 +105,7 @@ body, html {
 }
 
 .login-form {
+  margin:auto 45% auto 5%;
   max-width: 400px;
   width: 90%;
   padding: 40px;
@@ -115,6 +115,7 @@ body, html {
   z-index: 2;
   transform: scale(0.8);
   /*添加transform属性，使登录表单在加载时缩小到80%*/
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .login-form h1 {
@@ -194,7 +195,4 @@ input:focus {
   margin-top: 30px;
 }
 
-.blur-bg {
-  background-color: rgba(255, 255, 255, 0.6);
-}
 </style>
