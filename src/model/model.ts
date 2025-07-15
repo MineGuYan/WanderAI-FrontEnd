@@ -13,3 +13,8 @@ export interface HistoryChat {
   title: string,
   sessionId: string
 }
+
+export interface HistoryMessage {
+  type: "ai" | "human",
+  content: string
+}
