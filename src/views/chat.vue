@@ -10,7 +10,7 @@ import type {HistoryChat, message, StreamResult, HistoryMessage} from "../model/
 
 let sessionId: string
 let chatting: boolean = false
-let SidebarIsHiden: boolean = true
+const SidebarIsHiden = ref(true)
 const uerInput = ref('')
 const messages = ref<message[]>([])
 const title = ref('')
@@ -148,11 +148,11 @@ async function getChatHistory(chat: HistoryChat) {
 }
 
 function showSidebar() {
-  SidebarIsHiden = false
+  SidebarIsHiden.value = false
 }
 
 function hideSidebar() {
-  SidebarIsHiden = true
+  SidebarIsHiden.value = true
 }
 
 function handleEnter(e: KeyboardEvent) {
