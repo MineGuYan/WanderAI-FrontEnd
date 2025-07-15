@@ -81,7 +81,7 @@ async function login() {
   </div>
 </template>
 
-<style>
+<style scoped>
 /* 全局样式，禁止页面滚动 */
 body, html {
   margin: 0;
@@ -89,9 +89,6 @@ body, html {
   height: 100%;
   overflow: hidden;
 }
-</style>
-
-<style scoped>
 .login-container {
   display: flex;
   height: 100vh;
