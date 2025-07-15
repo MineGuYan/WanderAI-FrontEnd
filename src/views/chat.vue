@@ -1,35 +1,17 @@
 <script setup lang="ts">
 import '../assets/iconfont/iconfont.css'
 import api from '../api/request.ts'
-import {type Ref, ref, onMounted} from 'vue'
-import {marked} from "marked";
+import { ref, onMounted } from 'vue'
+import { marked } from "marked";
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
+import type { message, StreamResult } from "../model/model.ts";
 
-type message = {
-  userText: string,
-  isLoading: boolean,
-  aiText: string
-}
-
-export interface StreamResult {
-  type: "chunk" | "end" | "error";
-  content: string;
-}
-
-let llm: string[]
 let sessionId: string
 let chatting: boolean = false
-const currentModel = ref('')
 const uerInput = ref('')
-const messages: Ref<message[]> = ref([])
-
-async function getModels() {
-  const response = await api.get("/chat/models")
-  llm = response.data.data
-  currentModel.value = llm[0]
-}
+const messages = ref<message[]>([])
 
 async function createSession() {
   const response = await api.get("/chat/create")
@@ -60,7 +42,6 @@ async function sendMessage() {
       },
       body: JSON.stringify({
         message: messages.value[messages.value.length - 1].userText,
-        model: currentModel.value
       })
     })
 
@@ -126,7 +107,6 @@ function createNewChat(){
 }
 
 onMounted(() => {
-  getModels()
   createSession()
 
   marked.use(markedHighlight({
@@ -151,14 +131,10 @@ onMounted(() => {
     </router-link>
   </div>
 
-  <select class="change-model" v-model="currentModel" id="llm-select">
-    <option v-for="model in llm">{{ model }}</option>
-  </select>
-
   <div class="chatting">
     <div class="header-container">
       <span class="iconfont icon-ai"></span>
-      <h1>AI聊天助手</h1>
+      <h1>漫游精灵——WanderAI</h1>
     </div>
     <p>你好，我是你的AI助手！请问有什么可以帮助你的吗？</p>
     <hr>
@@ -222,20 +198,6 @@ i{
 .sidebar .button i {
   font-size: 40px;
   margin-left: 20px;
-}
-
-.change-model {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 8px 12px;
-  font-size: 16px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  background-color: white;
-  color: #333;
-  cursor: pointer;
-  z-index: 1000;
 }
 
 .chatting {

@@ -10,6 +10,7 @@ const colors = [
   '#00b3f8', '#00adfb'
 ]
 const currentColorIndex = ref(0)
+const HotSpots = ref<string[]>([])
 
 function getCharColor(index: number) {
   // 根据索引和当前颜色索引返回颜色，从左往右变换
@@ -17,7 +18,13 @@ function getCharColor(index: number) {
   return colors[colorIndex]
 }
 
+async function getHotSpots() {
+  
+}
+
 onMounted(() => {
+  getHotSpots()
+
   const timer = setInterval(() => {
     currentColorIndex.value = (currentColorIndex.value + 1) % colors.length
   }, 200)
@@ -47,10 +54,15 @@ onMounted(() => {
 
     <div class="header-container">
       <span class="iconfont icon-ai"></span>
-      <h1 class="title">AI聊天助手</h1>
+      <h1 class="title">漫游精灵——WanderAI</h1>
     </div>
 
     <p class="sub_title">作为你的智能伙伴，我既能写文案、想点子，还能陪你聊天、快跟我交流吧!</p>
+
+    <ul>
+      热门景点推荐
+      <li v-for="hs in HotSpots">{{ hs }}</li>
+    </ul>
 
     <!-- 蓝色框包含开始对话按钮 -->
     <div class="chat-box">
