@@ -63,29 +63,25 @@ async function login() {
 
 <template>
   <div class="login-container">
-    <!-- 左侧登录表单 -->
-    <div class="left-side">
-      <div class="login-form">
-        <h1>登录</h1>
-        <form>
-          <div class="form-group">
-            <label for="userid">账号：</label>
-            <input type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
-          </div>
-          <div class="form-group">
-            <label for="password">密码：</label>
-            <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
-          </div>
-          <button @click="login" type="button" class="login-btn">登录</button>
-          <router-link to="/register" class="register-link">注册新用户</router-link>
-        </form>
-      </div>
+    <div class="background-image-wrapper">
+      <img src="../assets/img/loginback1.png" alt="登录背景" class="background-image" />
+    </div>
+    <div class="login-form blur-bg">
+      <h1>登录</h1>
+      <form>
+        <div class="form-group">
+          <label for="userid">账号：</label>
+          <input type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
+        </div>
+        <div class="form-group">
+          <label for="password">密码：</label>
+          <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
+        </div>
+        <button @click="login" type="button" class="login-btn">登录</button>
+        <router-link to="/register" class="register-link">注册新用户</router-link>
+      </form>
     </div>
 
-    <!-- 右侧背景图片 -->
-    <div class="right-side">
-      <img src="../assets/img/Login-leftbkg.png" alt="登录背景" class="background-image" />
-    </div>
   </div>
 </template>
 
@@ -96,40 +92,46 @@ async function login() {
   width: 100%;
 }
 
-.left-side {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
+.background-image-wrapper {
+  /*该元素定位为绝对定位，相对于最近的定位元素（如果没有，则相对于页面*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*元素的宽度和高度占满父元素的宽度和高度*/
+
+  width: 100%;
+  height: 100%;
+  /*内容溢出该元素时，将其隐藏。这通常用于裁剪内容，使其不会超出边界*/
+  overflow: hidden;
+  /*元素的堆叠顺序。z-index 值越大，元素越靠前。这里将它设为1，意味着它会位于堆叠上下文中的其他元素之下*/
+  z-index: 1;
 }
 
 .background-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-size: contain;
+  /*背景图像适应容器的大小同时保持图片的比例*/
 }
-
-.right-side {
-  flex: 1;
-  background-color: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
 .login-form {
   max-width: 400px;
-  width: 80%;
+  max-height: 400px;
+  width: 40%;
   padding: 40px;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
+  position: relative;
+  margin-top:80px;
+  margin-left:100px;
+  z-index: 2;
+  transform: scale(0.8);
+  /*添加transform属性，使登录表单在加载时缩小到80%*/
 }
 
 .login-form h1 {
   text-align: center;
+  margin-top: 0;
   margin-bottom: 30px;
   color: #333;
   font-size: 28px;
@@ -140,6 +142,7 @@ async function login() {
 }
 
 label {
+  font-size: 18px;
   display: block;
   margin-bottom: 8px;
   color: #555;
@@ -171,8 +174,39 @@ input:focus {
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 15px;
-  transition: background-color 0.2s;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+  transform: translateY(0);
 }
 
+/* 鼠标悬停时的效果 */
+.login-btn:hover {
+  background-color: #0678d5;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  transform: translateY(-3px);
+}
+
+/* 按钮按下时的效果 */
+.login-btn:active {
+  background-color: #015cb9;
+  box-shadow: 0 1px 3px rgba(0, 123, 255, 0.3);
+  transform: translateY(0);
+  transition: all 0.1s ease;
+}
+
+/*添加蓝色聚焦环*/
+.login-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.register-link{
+  margin-top: 30px;
+}
+
+.blur-bg {
+  background-color: rgba(255, 255, 255, 0.6);
+}
 </style>
