@@ -19,7 +19,7 @@ function getCharColor(index: number) {
 }
 
 async function getHotSpots() {
-  
+
 }
 
 onMounted(() => {
