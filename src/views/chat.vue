@@ -7,6 +7,7 @@ import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import type {HistoryChat, message, StreamResult, HistoryMessage} from "../model/model.ts";
+import {ElMessageBox} from "element-plus";
 
 let sessionId: string
 let chatting: boolean = false
@@ -15,6 +16,7 @@ const uerInput = ref('')
 const messages = ref<message[]>([])
 const title = ref('')
 const historyChats = ref<HistoryChat[]>([])
+const settingsDialogVisible = ref(false);
 
 async function createSession() {
   const response = await api.get("/chat/create")
@@ -184,7 +186,7 @@ function handleCommand(command: string) {
 }
 
 function showSettings() {
-
+  settingsDialogVisible.value = true;
 }
 
 function showFeedback() {
@@ -192,8 +194,21 @@ function showFeedback() {
 }
 
 function logout() {
-  localStorage.removeItem('token')
-  window.location.href = '/'
+  ElMessageBox.confirm('确定要退出登录吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    localStorage.removeItem('token')
+    window.location.href = '/'
+  }).catch(() => {
+    console.log('用户取消退出');
+  });
+}
+
+function saveSettings() {
+  // 保存设置逻辑
+  settingsDialogVisible.value = false;
 }
 
 onMounted(() => {
@@ -295,6 +310,34 @@ onMounted(() => {
     <i class="iconfont icon-jiantou2-copy-copy" @click="sendMessage()"></i>
   </div>
 
+  <!-- 账户设置对话框 -->
+  <el-dialog
+    v-model="settingsDialogVisible"
+    title="账户设置"
+    width="50%"
+    :close-on-click-modal="false"
+  >
+    <!-- 对话框内容 -->
+    <el-tabs v-model="activeTab">
+      <el-tab-pane label="基本信息" name="basic">
+        <account-basic-form :user-data="userInfo" />
+      </el-tab-pane>
+      <el-tab-pane label="安全设置" name="security">
+        <account-security-form />
+      </el-tab-pane>
+      <el-tab-pane label="通知偏好" name="notification">
+        <account-notification-form />
+      </el-tab-pane>
+    </el-tabs>
+
+    <!-- 对话框底部按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="settingsDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveSettings">保存</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped>
