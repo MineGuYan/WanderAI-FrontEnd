@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import "../assets/iconfont/iconfont.css"
 import { ref, onMounted, onUnmounted } from 'vue'
+import api from '../api/request.ts'
+import type { HotSpot } from '../model/model.ts'
 
 const colors = [
   '#7dd3c0', '#75d4c2', '#6dd5c4', '#65d6c6', '#5dd7c8', '#55d8ca',
@@ -10,7 +12,7 @@ const colors = [
   '#00b3f8', '#00adfb'
 ]
 const currentColorIndex = ref(0)
-const HotSpots = ref<string[]>([])
+const HotSpots = ref<HotSpot[]>([])
 
 function getCharColor(index: number) {
   // 根据索引和当前颜色索引返回颜色，从左往右变换
@@ -19,7 +21,8 @@ function getCharColor(index: number) {
 }
 
 async function getHotSpots() {
-
+  const response = await api.get("/hotspot")
+  HotSpots.value = response.data.data as HotSpot[]
 }
 
 onMounted(() => {
@@ -61,7 +64,9 @@ onMounted(() => {
 
     <ul class="recommendation">
       热门景点推荐
-      <li class="recommendation_img" v-for="hs in HotSpots">{{ hs }}</li>
+      <li class="recommendation_img" v-for="hs in HotSpots">
+        <strong>{{ hs.name }}:</strong>>{{ hs.description }}
+      </li>
     </ul>
 
     <!-- 蓝色框包含开始对话按钮 -->

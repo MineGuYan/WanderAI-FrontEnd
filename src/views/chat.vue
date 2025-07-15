@@ -6,16 +6,24 @@ import { marked } from "marked";
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import type { message, StreamResult } from "../model/model.ts";
+import type {HistoryChat, message, StreamResult, HistoryMessage} from "../model/model.ts";
 
 let sessionId: string
 let chatting: boolean = false
+let SidebarIsHiden: boolean = true
 const uerInput = ref('')
 const messages = ref<message[]>([])
+const title = ref('')
+const historyChats = ref<HistoryChat[]>([])
 
 async function createSession() {
   const response = await api.get("/chat/create")
   sessionId = response.data.data.sessionId
+}
+
+async function getHistoryChats() {
+  const response = await api.get("/history/chatList")
+  historyChats.value = response.data.data as HistoryChat[]
 }
 
 async function sendMessage() {
@@ -38,6 +46,7 @@ async function sendMessage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // "Authentication": localStorage.getItem('token'),
         Accept: "text/event-stream",
       },
       body: JSON.stringify({
@@ -90,6 +99,60 @@ async function sendMessage() {
   }finally {
     chatting = false
   }
+
+  await getTitle()
+}
+
+async function getTitle() {
+  if (title.value !== '') return;
+
+  try {
+    const response = await api.get('/history/chatTitle',{
+      params: {
+        sessionId: sessionId
+      }
+    })
+    if (response.data.code === 200) {
+      title.value = response.data.data.title || '未命名对话';
+    } else {
+      console.error('获取标题失败:', response.data.message);
+    }
+  } catch (error) {
+    console.error('请求标题时发生错误:', error);
+  }
+}
+
+async function getChatHistory(chat: HistoryChat) {
+  if (!chat) return
+  sessionId = chat.sessionId
+  title.value = chat.title
+  const response = await api.get('/history/chatContent',{
+    params: {
+      sessionId: sessionId
+    }
+  })
+  messages.value=[]
+  const history = response.data.data as HistoryMessage[]
+  for (const item of history) {
+    if (item.type === 'ai') {
+      messages.value[messages.value.length - 1].aiText = marked(item.content) as string
+    } else {
+      messages.value.push({
+        userText: item.content,
+        isLoading: false,
+        aiText: ''
+      })
+      continue
+    }
+  }
+}
+
+function showSidebar() {
+  SidebarIsHiden = false
+}
+
+function hideSidebar() {
+  SidebarIsHiden = true
 }
 
 function handleEnter(e: KeyboardEvent) {
@@ -108,6 +171,7 @@ function createNewChat(){
 
 onMounted(() => {
   createSession()
+  getHistoryChats()
 
   marked.use(markedHighlight({
     langPrefix: 'hljs language-',
@@ -120,16 +184,42 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="sidebar">
+  <div class="sidebar" v-show="SidebarIsHiden">
     <ul>
       <li><i class="iconfont icon-ai"></i></li>
-      <li><i class="iconfont icon-zhankaicebianlan"></i></li>
-      <li><i class="iconfont icon-duihuakuang" @click="createNewChat"></i></li>
+      <li><i class="iconfont icon-zhankaicebianlan" @click="showSidebar" title="打开边栏"></i></li>
+      <li><i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i></li>
     </ul>
+    <div>
+      头像
+    </div>
     <router-link to="/" class="button">
       <i class="bottom iconfont icon-tuichu"></i>
     </router-link>
   </div>
+
+  <div v-show="!SidebarIsHiden">
+    <p>漫游精灵</p>
+    <i class="iconfont icon-shouqicebianlan" @click="hideSidebar"></i>
+    <i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i>
+    <ul>
+      历史对话
+      <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)">
+        {{ chat.title || '未命名对话' }}
+<!--          <router-link :to="{ path: '/chat', query: { sessionId: chat.sessionId } }">-->
+<!--            {{ chat.title || '未命名对话' }}-->
+<!--          </router-link>-->
+      </li>
+    </ul>
+    <div>
+      个人信息
+    </div>
+    <router-link to="/" class="button">
+      <i class="bottom iconfont icon-tuichu"></i>
+    </router-link>
+  </div>
+
+  <div v-if="title!==''">{{title}}</div>
 
   <div class="chatting">
     <div class="header-container">

@@ -13,3 +13,14 @@ export interface HistoryChat {
   title: string,
   sessionId: string
 }
+
+export interface HistoryMessage {
+  type: "ai" | "human",
+  content: string
+}
+
+export interface HotSpot {
+  name: string,
+  description: string,
+  // image: string
+}
