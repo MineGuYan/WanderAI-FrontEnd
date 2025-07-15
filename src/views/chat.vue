@@ -169,6 +169,33 @@ function createNewChat(){
   messages.value=[]
 }
 
+function handleCommand(command: string) {
+  switch(command) {
+    case 'settings':
+      showSettings();
+      break;
+    case 'feedback':
+      showFeedback();
+      break;
+    case 'logout':
+      logout();
+      break;
+  }
+}
+
+function showSettings() {
+
+}
+
+function showFeedback() {
+
+}
+
+function logout() {
+  localStorage.removeItem('token')
+  window.location.href = '/'
+}
+
 onMounted(() => {
   createSession()
   getHistoryChats()
@@ -186,12 +213,30 @@ onMounted(() => {
 <template>
   <div class="sidebar" v-show="SidebarIsHiden">
     <ul>
-      <li><i class="iconfont icon-ai"></i></li>
+      <li><i class="iconfont icon-ai" @click="showSidebar"></i></li>
       <li><i class="iconfont icon-zhankaicebianlan" @click="showSidebar" title="打开边栏"></i></li>
       <li><i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i></li>
     </ul>
     <div>
-      头像
+      <el-dropdown trigger="click" @command="handleCommand">
+        <span class="el-dropdown-link">
+          用户
+        </span>
+        <!-- 下拉菜单内容 -->
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="settings">
+              <span>账户设置</span>
+            </el-dropdown-item>
+            <el-dropdown-item command="feedback">
+              <span>意见反馈</span>
+            </el-dropdown-item>
+            <el-dropdown-item divided command="logout">
+              <span>退出登录</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
     <router-link to="/" class="button">
       <i class="bottom iconfont icon-tuichu"></i>
