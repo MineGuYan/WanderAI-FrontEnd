@@ -43,7 +43,7 @@ onMounted(() => {
     <!-- 新增的更新公告文字 -->
     <p class="update-notice">
       <span
-        v-for="(char, index) in '多轮对话，多种模型，模型更新，思考更深，推理更强'"
+        v-for="(char, index) in '漫游精灵，成为你旅途中的知心伙伴，带你探索每一个精彩瞬间'"
         :key="index"
         :style="{ color: getCharColor(index) }"
         class="char"
@@ -57,11 +57,11 @@ onMounted(() => {
       <h1 class="title">漫游精灵——WanderAI</h1>
     </div>
 
-    <p class="sub_title">作为你的智能伙伴，我既能写文案、想点子，还能陪你聊天、快跟我交流吧!</p>
+    <p class="sub_title">作为你的智能伙伴，我既能生成旅行规划，还能陪你聊天、快跟我交流吧!</p>
 
-    <ul>
+    <ul class="recommendation">
       热门景点推荐
-      <li v-for="hs in HotSpots">{{ hs }}</li>
+      <li class="recommendation_img" v-for="hs in HotSpots">{{ hs }}</li>
     </ul>
 
     <!-- 蓝色框包含开始对话按钮 -->
@@ -75,6 +75,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+
 :global(html, body, #app) {
   height: 100%;
   margin: 0;
@@ -97,6 +98,7 @@ onMounted(() => {
   bottom: 0;
 }
 
+/* 添加了一个半透明的白色覆盖层，位于背景图像上方，用于给背景图加上一个轻微的白色遮罩效果。*/
 .home-container::before {
   content: '';
   position: absolute;
@@ -122,9 +124,9 @@ onMounted(() => {
 
 /* 新增的更新公告文字样式 */
 .update-notice {
-  font-size: 28px;
+  font-size: 36px;
   text-align: center;
-  margin: 75px 0 20px 0;
+  margin: 25px 0 20px 0;
   font-weight: 500;
 }
 
@@ -133,7 +135,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 65px;
+  margin-top: 30px;
 }
 
 .iconfont.icon-ai {
@@ -156,9 +158,22 @@ onMounted(() => {
   margin-top: 25px;
 }
 
+
+.recommendation{
+  padding: 0;
+  width: 100%;
+  display: flex;
+  color: #ec3939;
+  font-size: 28px;
+  text-align: center;
+  margin-top: 30px;
+  justify-content: center;
+  font-weight: bold;
+}
+
 /* 蓝色框样式 */
 .chat-box {
-  margin: 60px auto;
+  margin: 520px auto;
   padding: 30px;
   text-align: center;
 }
@@ -166,11 +181,11 @@ onMounted(() => {
 .button {
   max-width: 400px;
   display: inline-block;
-  padding: 30px 30px;
+  padding: 20px 30px;
   color: #078eef;
   text-decoration: none;
   border-radius: 15px;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
   transition: all 0.3s;
   margin-bottom: 15px;
@@ -192,14 +207,14 @@ onMounted(() => {
 
 .description {
   color: #666;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.5;
-  margin: 0;
+  margintop: 12px;
 }
 
 .teammate {
   color: #f42929;
-  font-size: 24px;
+  font-size: 26px;
   display: flex;
   position: fixed;
   bottom: 60px;
