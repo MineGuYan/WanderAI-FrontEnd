@@ -22,9 +22,7 @@ watch(userid, (newValue) => {
 
 watch(password, (newValue) => {
   if( newValue.length > 6) {
-
   } else {
-
   }
 
   if (newValue.length > 15) {
@@ -89,7 +87,7 @@ async function login() {
 <style scoped>
 .login-container {
   display: flex;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 
