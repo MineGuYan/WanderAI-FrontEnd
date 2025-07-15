@@ -62,9 +62,6 @@ async function login() {
 
 <template>
   <div class="login-container">
-    <div class="background-image-wrapper">
-      <img src="../assets/img/loginback1.png" alt="登录背景" class="background-image" />
-    </div>
     <div class="login-form blur-bg">
       <h1>登录</h1>
       <form>
@@ -87,31 +84,15 @@ async function login() {
 <style scoped>
 .login-container {
   display: flex;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+  background-image: url('../assets/img/loginback1.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-.background-image-wrapper {
-  /*该元素定位为绝对定位，相对于最近的定位元素（如果没有，则相对于页面*/
-  position: absolute;
-  top: 0;
-  left: 0;
-  /*元素的宽度和高度占满父元素的宽度和高度*/
-
-  width: 100%;
-  height: 100%;
-  /*内容溢出该元素时，将其隐藏。这通常用于裁剪内容，使其不会超出边界*/
-  overflow: hidden;
-  /*元素的堆叠顺序。z-index 值越大，元素越靠前。这里将它设为1，意味着它会位于堆叠上下文中的其他元素之下*/
-  z-index: 1;
-}
-
-.background-image {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
-  /*背景图像适应容器的大小同时保持图片的比例*/
-}
 .login-form {
   max-width: 400px;
   max-height: 400px;
