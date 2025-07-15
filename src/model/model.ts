@@ -5,6 +5,11 @@ export interface message {
 }
 
 export interface StreamResult {
-  type: "chunk" | "end" | "error";
-  content: string;
+  type: "chunk" | "end" | "error",
+  content: string
+}
+
+export interface HistoryChat {
+  title: string,
+  sessionId: string
 }
