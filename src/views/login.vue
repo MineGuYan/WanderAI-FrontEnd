@@ -1,10 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
+import { sha256 } from 'js-sha256'
 
 const userid = ref('');
 const password = ref('');
+
+watch(userid, (newValue) => {
+  if( newValue.length > 12) {
+
+  } else {
+
+  }
+
+  if (newValue.length > 20) {
+    userid.value = newValue.slice(0, 20);
+  }
+});
+
+watch(password, (newValue) => {
+  if( newValue.length > 6) {
+
+  } else {
+
+  }
+
+  if (newValue.length > 15) {
+    password.value = newValue.slice(0, 15);
+    alert("密码不能超过15个字符");
+  }
+});
 
 async function login() {
   if (userid.value === '' || password.value === '') {
@@ -12,18 +38,25 @@ async function login() {
     return;
   }
 
-  const response = await api.post('/user/login', {
-    accountId: userid.value,
-    password: password.value,
-  });
+  const encryptedPassword = sha256(password.value)
 
-  if(response.data.code===1){
-    localStorage.setItem('token', response.data.data.token);
-    alert(`欢迎，${response.data.data.nickname}！`);
-    // 登录成功后可以跳转到其他页面
-    await useRouter().push('/home');
-  } else {
-    alert('登录失败，请稍后再试');
+  try {
+    const response = await api.post('/user/login', {
+      accountId: userid.value,
+      password: encryptedPassword,
+    });
+
+    if (response.data.code === 1) {
+      localStorage.setItem('token', response.data.data.token);
+      alert(`欢迎，${response.data.data.nickname}！`);
+      // 登录成功后可以跳转到其他页面
+      await useRouter().push('/home');
+    } else {
+      alert('登录失败，请稍后再试');
+    }
+  } catch (error) {
+    console.error('登录请求失败:', error);
+    alert('登录请求失败，请稍后再试');
   }
 }
 </script>
@@ -35,7 +68,7 @@ async function login() {
     <form>
       <div>
         <label for="userid">账号：</label>
-        <input type="number" id="userid" v-model="userid" placeholder="请输入账号..." required />
+        <input type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
       </div>
       <div>
         <label for="password">密码：</label>
