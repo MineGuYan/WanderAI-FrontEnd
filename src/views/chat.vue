@@ -361,8 +361,8 @@ onMounted(() => {
       <i class="iconfont icon-shouqicebianlan" @click="hideSidebar" title="关闭边栏"></i>
     </div>
     <div class="open_dialogue">
-      <i class="iconfont icon-duihuakuang" @click="createNewChat"></i>
-      <span class="open_dialogue_title">开启新对话</span>
+      <i class="iconfont icon-duihuakuang" id="newChatButton" @click="createNewChat"></i>
+      <label class="open_dialogue_title" for="newChatButton">开启新对话</label>
     </div>
     <ul class="history-dialogue">
       历史对话
@@ -377,6 +377,7 @@ onMounted(() => {
       <span class="el-dropdown-link avatar">
         用户
       </span>
+      <span>个人信息</span>
       <!-- 下拉菜单内容 -->
       <template #dropdown>
         <el-dropdown-menu>
