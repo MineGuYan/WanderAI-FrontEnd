@@ -142,7 +142,7 @@ async function login() {
 
 .login-form {
   width: 36%;
-  height: 54%;
+  height: 50%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
@@ -240,7 +240,7 @@ input:focus {
 /* 简化响应式设计 - 只调整内容样式，不覆盖尺寸 */
 @media (min-width: 1200px) {
   .login-form {
-    padding: 50px;
+    padding: 14px 40px;
   }
 
   .login-form h1 {
@@ -269,7 +269,7 @@ input:focus {
 
 @media (min-width: 576px) and (max-width: 767px) {
   .login-form {
-    padding: 30px;
+    padding: 10px;
   }
 
   .login-form h1 {
@@ -290,7 +290,7 @@ input:focus {
 /* 小屏设备 - 移除所有尺寸覆盖 */
 @media (max-width: 575px) {
   .login-form {
-    padding: 25px;
+    padding: 10px;
   }
 
   .login-form h1 {
@@ -320,7 +320,7 @@ input:focus {
 
 @media (max-width: 400px) {
   .login-form {
-    padding: 20px;
+    padding: 10px;
   }
 
   .login-form h1 {
@@ -344,7 +344,7 @@ input:focus {
   }
 
   .login-form {
-    padding: 20px;
+    padding: 10px;
     max-height: 90vh;
     overflow-y: auto;
   }
@@ -370,7 +370,7 @@ input:focus {
   }
 
   .login-form {
-    padding: 15px;
+    padding: 10px;
     max-width: 350px;
     max-height: 90vh;
     overflow-y: auto;

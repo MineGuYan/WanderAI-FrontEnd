@@ -157,7 +157,7 @@ async function register() {
 
 .register-form {
   width: 36%;
-  height: 54%;
+  height: 60%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
@@ -175,10 +175,17 @@ async function register() {
 
 .register-form h1 {
   text-align: center;
-  margin-top: 0;
+  margin-top: 0px;
   margin-bottom: 10px;
   color: #333;
   font-size: 19.2px;
+
+  /* 覆盖用户代理样式表的默认margin */
+  margin-block-start: 2px;  /* 原来是0.67em，现在设为0.2em */
+  margin-block-end: 2px;    /* 原来是0.67em，现在设为0.2em */
+  /*覆盖用户代理样式表的默认padding */
+  padding-block-start: 0px; /* 原来是0.67em，现在设为0 */
+  padding-block-end: 0px;   /* 原来是0.67em，现在设为0 */
 }
 
 .form-group {
@@ -210,7 +217,7 @@ input:focus {
 
 .register-btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -255,7 +262,7 @@ input:focus {
 /* 简化响应式设计 - 只调整内容样式，不覆盖尺寸 */
 @media (min-width: 1200px) {
   .register-form {
-    padding: 50px;
+    padding: 12px 40px;
   }
 
   .register-form h1 {
@@ -284,7 +291,7 @@ input:focus {
 
 @media (min-width: 576px) and (max-width: 767px) {
   .register-form {
-    padding: 30px;
+    padding: 10px;
   }
 
   .register-form h1 {
@@ -305,7 +312,7 @@ input:focus {
 /* 小屏设备 - 移除所有尺寸覆盖 */
 @media (max-width: 575px) {
   .register-form {
-    padding: 25px;
+    padding: 12px;
   }
 
   .register-form h1 {
@@ -335,7 +342,7 @@ input:focus {
 
 @media (max-width: 400px) {
   .register-form {
-    padding: 20px;
+    padding: 12px;
   }
 
   .register-form h1 {
@@ -359,7 +366,7 @@ input:focus {
   }
 
   .register-form {
-    padding: 20px;
+    padding: 12px;
     max-height: 90vh;
     overflow-y: auto;
   }
@@ -385,7 +392,7 @@ input:focus {
   }
 
   .register-form {
-    padding: 15px;
+    padding: 12px;
     max-width: 350px;
     max-height: 90vh;
     overflow-y: auto;
