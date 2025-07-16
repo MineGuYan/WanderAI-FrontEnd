@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4967069 */
-  src: url('iconfont.woff2?t=1752292136095') format('woff2'),
-       url('iconfont.woff?t=1752292136095') format('woff'),
-       url('iconfont.ttf?t=1752292136095') format('truetype');
+  src: url('iconfont.woff2?t=1752666105445') format('woff2'),
+       url('iconfont.woff?t=1752666105445') format('woff'),
+       url('iconfont.ttf?t=1752666105445') format('truetype');
 }
 
 .iconfont {
@@ -13,20 +13,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-atm-fill:before {
-  content: "\e837";
-}
-
-.icon-jiazai:before {
-  content: "\e699";
-}
-
-.icon-atm-away-fill:before {
-  content: "\e836";
-}
-
-.icon-tuichu:before {
-  content: "\e620";
+.icon-tuichu1:before {
+  content: "\e601";
 }
 
 .icon-atm-fill:before {
@@ -35,14 +23,6 @@
 
 .icon-jiazai:before {
   content: "\e699";
-}
-
-.icon-atm-away-fill:before {
-  content: "\e836";
-}
-
-.icon-tuichu:before {
-  content: "\e620";
 }
 
 .icon-zhongxinshiyang:before {

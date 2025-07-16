@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "19619479",
+      "name": "退出",
+      "font_class": "tuichu1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
       "icon_id": "34452959",
       "name": "atm-fill",
       "font_class": "atm-fill",
@@ -18,20 +25,6 @@
       "font_class": "jiazai",
       "unicode": "e699",
       "unicode_decimal": 59033
-    },
-    {
-      "icon_id": "34452958",
-      "name": "atm-away-fill",
-      "font_class": "atm-away-fill",
-      "unicode": "e836",
-      "unicode_decimal": 59446
-    },
-    {
-      "icon_id": "6626202",
-      "name": "退出",
-      "font_class": "tuichu",
-      "unicode": "e620",
-      "unicode_decimal": 58912
     },
     {
       "icon_id": "4320365",
