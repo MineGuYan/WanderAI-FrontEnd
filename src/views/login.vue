@@ -82,37 +82,80 @@ async function login() {
 </template>
 
 <style scoped>
-/* 全局样式，禁止页面滚动 */
-body, html {
+/* 重置全局样式 */
+* {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
+  box-sizing: border-box;
 }
+
+/* 确保html和body完全占满屏幕 */
+:global(html), :global(body) {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* 主容器样式 - 确保背景图片完全显示 */
+/*将 background-size: cover 改为 background-size: 100% 100%
+这确保背景图片会拉伸以完全填满容器，不会有任何部分被裁剪
+使用绝对定位确保容器完全占满屏幕
+同时设置了top、left、right、bottom为0*/
 .login-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('../assets/img/loginback1.png');
-  background-size: cover;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-position: center center;
+  display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+
+/* 备用背景样式 - 确保在任何情况下都能铺满 */
+.login-container::before {
+  /*创建了一个伪元素作为备用背景，确保即使主背景有问题，也能正常显示*/
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/img/loginback1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
 .login-form {
-  margin:auto 45% auto 5%;
-  max-width: 400px;
-  width: 90%;
-  padding: 40px;
-  background-color: #fff;
+  max-width: 320px;  /* 从400px改为320px，使表单更窄 */
+  width: 40%;        /* 从90%改为75%，减少相对宽度 */
+  padding: 35px;     /* 从40px改为35px，稍微减少内边距 */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
-  z-index: 2;
-  transform: scale(0.8);
-  /*添加transform属性，使登录表单在加载时缩小到80%*/
-  background-color: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  box-sizing: border-box;
+  position: relative;
+
+  /* 修复的宽度敏感缩放功能 */
+  transform: scale(clamp(0.3, (100vw+100vh) / 1200px, 2.0));
+  transform-origin: center;
+  transition: transform 0.1s ease-out;
+
+  /* 移除会干扰缩放的尺寸限制 */
+  min-width: unset;
+  max-width: unset;
 }
 
 .login-form h1 {
@@ -190,6 +233,184 @@ input:focus {
 
 .register-link{
   margin-top: 30px;
+  display: block;
+  text-align: center;
 }
 
+/* 简化响应式设计 - 只调整内容样式，不覆盖尺寸 */
+@media (min-width: 1200px) {
+  .login-form {
+    padding: 50px;
+  }
+
+  .login-form h1 {
+    font-size: 32px;
+  }
+
+  label {
+    font-size: 20px;
+  }
+
+  input, .login-btn {
+    padding: 15px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .login-form {
+    padding: 40px;
+  }
+
+  .login-form h1 {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .login-form {
+    padding: 30px;
+  }
+
+  .login-form h1 {
+    font-size: 26px;
+    margin-bottom: 25px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input, .login-btn {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* 小屏设备 - 移除所有尺寸覆盖 */
+@media (max-width: 575px) {
+  .login-form {
+    padding: 25px;
+  }
+
+  .login-form h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  input, .login-btn {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .login-btn {
+    margin-top: 12px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-form {
+    padding: 20px;
+  }
+
+  .login-form h1 {
+    font-size: 22px;
+  }
+
+  input, .login-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+/* 高度较小的屏幕适配 */
+@media (max-height: 600px) {
+  .login-container {
+    background-size: 100% 100%;
+  }
+
+  .login-form {
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .login-form h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  input, .login-btn {
+    padding: 10px;
+  }
+}
+
+/* 横屏模式下的特殊处理 */
+@media (orientation: landscape) and (max-height: 500px) {
+  .login-container {
+    background-size: 100% 100%;
+  }
+
+  .login-form {
+    padding: 15px;
+    max-width: 350px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .login-form h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  input, .login-btn {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+/* 强制背景铺满 - 适用于所有屏幕比例 */
+@media screen {
+  .login-container {
+    background-size: 100% 100% !important;
+  }
+}
+
+/* 确保在极端宽屏下也能正常显示 */
+@media (min-aspect-ratio: 21/9) {
+  .login-container {
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+  }
+}
+
+/* 确保在极端竖屏下也能正常显示 */
+@media (max-aspect-ratio: 9/16) {
+  .login-container {
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+  }
+}
 </style>
