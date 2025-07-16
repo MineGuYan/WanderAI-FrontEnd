@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
+import AspectRatioBox from "../components/AspectRatioBox.vue";
 
 const userid = ref('');
 const password = ref('');
@@ -64,7 +65,7 @@ async function login() {
 
 <template>
   <div class="login-container">
-    <div class="login-form blur-bg">
+    <AspectRatioBox class="login-form blur-bg" :aspect-ratio="20/19" :widthPercentage="36">
       <h1>登录</h1>
       <form>
         <div class="form-group">
@@ -78,7 +79,7 @@ async function login() {
         <button @click="login" type="button" class="login-btn">登录</button>
         <router-link to="/register" class="register-link">注册新用户</router-link>
       </form>
-    </div>
+    </AspectRatioBox>
 
   </div>
 </template>
@@ -142,7 +143,6 @@ async function login() {
 
 .login-form {
   width: 36%;
-  height: 50%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
