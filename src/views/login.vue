@@ -78,8 +78,10 @@ async function login() {
           <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
         </div>
       </form>
-      <button @click="login" type="button" class="login-btn">登录</button>
-      <router-link to="/register" class="register-link">注册新用户</router-link>
+      <div class="form-actions">
+        <button @click="login" type="button" class="login-btn">登录</button>
+        <router-link to="/register" class="register-link">注册新用户</router-link>
+      </div>
     </AspectRatioBox>
 
   </div>
@@ -167,12 +169,17 @@ async function login() {
 
 .form {
   width: 100%;
-  height: 54%;
+  height: 60%;
 }
 .form-group {
   margin-bottom: 14px;
   width: 100%;
-  height: 45%;
+  height: 40%;
+}
+
+.form-actions {
+  width: 100%;
+  height: 20%;
 }
 
 label {
@@ -182,7 +189,7 @@ label {
   color: #555;
   font-weight: 500;
   width:100%;
-  height:35%;
+  height:30%;
 }
 
 input {
@@ -192,7 +199,7 @@ input {
   font-size: 16px;
   box-sizing: border-box;
   width: 100%;
-  height: 60%;
+  height: 45%;
 }
 
 input:focus {
@@ -203,7 +210,7 @@ input:focus {
 
 .login-btn {
   width: 100%;
-  height: 15%;
+  height: 50%;
   padding: 12px;
   background-color: #007bff;
   color: white;
@@ -242,7 +249,7 @@ input:focus {
 
 .register-link{
   width: 100%;
-  height: 10%;
+  height: 50%;
   margin-top: 4px;
   display: block;
   text-align: center;
