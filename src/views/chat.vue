@@ -17,8 +17,10 @@ const messages = ref<message[]>([])
 const title = ref('')
 const historyChats = ref<HistoryChat[]>([])
 const settingsDialogVisible = ref(false);
+const feedbackDialogVisible = ref(false);
 const nickname = ref(localStorage.getItem('nickname') || '未设置昵称');
 const accountId = ref(localStorage.getItem('accountId') || '未设置账号');
+const feedbackContent = ref('');
 
 async function createSession() {
   const response = await api.get("/chat/create")
@@ -192,7 +194,7 @@ function showSettings() {
 }
 
 function showFeedback() {
-
+  feedbackDialogVisible.value = true;
 }
 
 function logout() {
@@ -235,6 +237,7 @@ async function saveSettings() {
             confirmButtonText: '确定',
             type: 'success'
           });
+          settingsDialogVisible.value = false;
         } else {
           nickname.value = localStorage.getItem('nickname') || '未设置昵称';
           await ElMessageBox.alert('更新昵称失败，请稍后再试', '提示', {
@@ -251,8 +254,47 @@ async function saveSettings() {
       });
     }
   }
+}
 
-  settingsDialogVisible.value = false;
+function cancelFeedback() {
+  feedbackContent.value = '';
+  feedbackDialogVisible.value = false;
+}
+
+async function confirmFeedback() {
+  if (feedbackContent.value.trim() === '') {
+    await ElMessageBox.alert('反馈内容不能为空', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
+    return;
+  }
+
+  try {
+    const response = await api.post('/suggession', {
+      message: feedbackContent.value
+    });
+
+    if (response.data.code === 200) {
+      await ElMessageBox.alert('感谢您的反馈！', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+      feedbackContent.value = '';
+      feedbackDialogVisible.value = false;
+    } else {
+      await ElMessageBox.alert('提交反馈失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('提交反馈请求失败:', error);
+    await ElMessageBox.alert('提交反馈请求失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'error'
+    });
+  }
 }
 
 watch(nickname, (newValue) => {
@@ -280,12 +322,14 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- 未展开的侧边栏 -->
   <div class="sidebar" v-show="SidebarIsHiden">
     <ul>
       <li><i class="iconfont icon-ai" @click="showSidebar"></i></li>
       <li><i class="iconfont icon-zhankaicebianlan" @click="showSidebar" title="打开边栏"></i></li>
       <li><i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i></li>
     </ul>
+    <!-- 用户下拉菜单 -->
     <div>
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
@@ -308,10 +352,11 @@ onMounted(() => {
       </el-dropdown>
     </div>
     <router-link to="/" class="button">
-      <i class="bottom iconfont icon-tuichu"></i>
+      <i class="bottom iconfont icon-tuichu" title="返回主页"></i>
     </router-link>
   </div>
 
+  <!-- 展开的侧边栏 -->
   <div v-show="!SidebarIsHiden">
     <p>漫游精灵</p>
     <i class="iconfont icon-shouqicebianlan" @click="hideSidebar"></i>
@@ -386,6 +431,27 @@ onMounted(() => {
       <span class="dialog-footer">
         <el-button @click="cancelSettings">取消</el-button>
         <el-button type="primary" @click="saveSettings">保存</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <!-- 意见反馈对话框 -->
+  <el-dialog
+    v-model="feedbackDialogVisible"
+    title="账户设置"
+    width="50%"
+    :close-on-click-modal="false"
+  >
+    <!-- 对话框内容 -->
+    <div>
+      <textarea placeholder="请输入反馈意见..." v-model="feedbackContent"></textarea>
+    </div>
+
+    <!-- 对话框底部按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="cancelFeedback">取消</el-button>
+        <el-button type="primary" @click="confirmFeedback">确定</el-button>
       </span>
     </template>
   </el-dialog>
