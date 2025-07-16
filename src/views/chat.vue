@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import '../assets/iconfont/iconfont.css'
 import api from '../api/request.ts'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { marked } from "marked";
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
@@ -17,6 +17,10 @@ const messages = ref<message[]>([])
 const title = ref('')
 const historyChats = ref<HistoryChat[]>([])
 const settingsDialogVisible = ref(false);
+const feedbackDialogVisible = ref(false);
+const nickname = ref(localStorage.getItem('nickname') || '未设置昵称');
+const accountId = ref(localStorage.getItem('accountId') || '未设置账号');
+const feedbackContent = ref('');
 
 async function createSession() {
   const response = await api.get("/chat/create")
@@ -190,7 +194,7 @@ function showSettings() {
 }
 
 function showFeedback() {
-
+  feedbackDialogVisible.value = true;
 }
 
 function logout() {
@@ -200,16 +204,108 @@ function logout() {
     type: 'warning'
   }).then(() => {
     localStorage.removeItem('token')
+    localStorage.removeItem('nickname')
+    localStorage.removeItem('accountId')
     window.location.href = '/'
   }).catch(() => {
     console.log('用户取消退出');
   });
 }
 
-function saveSettings() {
-  // 保存设置逻辑
+function cancelSettings() {
+  nickname.value = localStorage.getItem('nickname') || '未设置昵称';
   settingsDialogVisible.value = false;
 }
+
+async function saveSettings() {
+  if( nickname.value.trim() === '') {
+    await ElMessageBox.alert('昵称不能为空', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
+    return;
+  }
+
+  if(nickname.value !== localStorage.getItem('nickname')) {
+    try {
+      const response = await api.post('/user/nickname', {
+        nickname: nickname.value
+      });
+      if (response.data.code === 200) {
+          localStorage.setItem('nickname', nickname.value);
+          await ElMessageBox.alert('昵称已更新', '提示', {
+            confirmButtonText: '确定',
+            type: 'success'
+          });
+          settingsDialogVisible.value = false;
+        } else {
+          nickname.value = localStorage.getItem('nickname') || '未设置昵称';
+          await ElMessageBox.alert('更新昵称失败，请稍后再试', '提示', {
+            confirmButtonText: '确定',
+            type: 'error'
+          });
+        }
+    } catch(error) {
+      nickname.value = localStorage.getItem('nickname') || '未设置昵称';
+      console.error('更新昵称请求失败:', error);
+      await ElMessageBox.alert('更新昵称请求失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'error'
+      });
+    }
+  }
+}
+
+function cancelFeedback() {
+  feedbackContent.value = '';
+  feedbackDialogVisible.value = false;
+}
+
+async function confirmFeedback() {
+  if (feedbackContent.value.trim() === '') {
+    await ElMessageBox.alert('反馈内容不能为空', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
+    return;
+  }
+
+  try {
+    const response = await api.post('/suggession', {
+      message: feedbackContent.value
+    });
+
+    if (response.data.code === 200) {
+      await ElMessageBox.alert('感谢您的反馈！', '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
+      feedbackContent.value = '';
+      feedbackDialogVisible.value = false;
+    } else {
+      await ElMessageBox.alert('提交反馈失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'error'
+      });
+    }
+  } catch (error) {
+    console.error('提交反馈请求失败:', error);
+    await ElMessageBox.alert('提交反馈请求失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'error'
+    });
+  }
+}
+
+watch(nickname, (newValue) => {
+  if (newValue.length > 20) {
+    nickname.value = newValue.slice(0, 20);
+    ElMessageBox.alert('昵称不能超过20个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
+  }
+});
 
 onMounted(() => {
   createSession()
@@ -226,12 +322,14 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- 未展开的侧边栏 -->
   <div class="sidebar" v-show="SidebarIsHiden">
     <ul>
       <li><i class="iconfont icon-ai" @click="showSidebar"></i></li>
       <li><i class="iconfont icon-zhankaicebianlan" @click="showSidebar" title="打开边栏"></i></li>
       <li><i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i></li>
     </ul>
+    <!-- 用户下拉菜单 -->
     <div>
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
@@ -254,10 +352,11 @@ onMounted(() => {
       </el-dropdown>
     </div>
     <router-link to="/" class="button">
-      <i class="bottom iconfont icon-tuichu"></i>
+      <i class="bottom iconfont icon-tuichu" title="返回主页"></i>
     </router-link>
   </div>
 
+  <!-- 展开的侧边栏 -->
   <div v-show="!SidebarIsHiden">
     <p>漫游精灵</p>
     <i class="iconfont icon-shouqicebianlan" @click="hideSidebar"></i>
@@ -318,23 +417,41 @@ onMounted(() => {
     :close-on-click-modal="false"
   >
     <!-- 对话框内容 -->
-    <el-tabs v-model="activeTab">
-      <el-tab-pane label="基本信息" name="basic">
-        <account-basic-form :user-data="userInfo" />
-      </el-tab-pane>
-      <el-tab-pane label="安全设置" name="security">
-        <account-security-form />
-      </el-tab-pane>
-      <el-tab-pane label="通知偏好" name="notification">
-        <account-notification-form />
-      </el-tab-pane>
-    </el-tabs>
+    <div>
+      <p>昵称：</p>
+      <el-input v-model="nickname" placeholder="请输入昵称"></el-input>
+    </div>
+    <div>
+      <p>账号：</p>
+      <el-input v-model="accountId" disabled></el-input>
+    </div>
 
     <!-- 对话框底部按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="settingsDialogVisible = false">取消</el-button>
+        <el-button @click="cancelSettings">取消</el-button>
         <el-button type="primary" @click="saveSettings">保存</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <!-- 意见反馈对话框 -->
+  <el-dialog
+    v-model="feedbackDialogVisible"
+    title="账户设置"
+    width="50%"
+    :close-on-click-modal="false"
+  >
+    <!-- 对话框内容 -->
+    <div>
+      <textarea placeholder="请输入反馈意见..." v-model="feedbackContent"></textarea>
+    </div>
+
+    <!-- 对话框底部按钮 -->
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="cancelFeedback">取消</el-button>
+        <el-button type="primary" @click="confirmFeedback">确定</el-button>
       </span>
     </template>
   </el-dialog>
