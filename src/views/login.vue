@@ -118,8 +118,9 @@ async function login() {
   background-repeat: no-repeat;
   background-position: center center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-left: 10%;
   overflow: hidden;
 }
 
@@ -140,9 +141,9 @@ async function login() {
 }
 
 .login-form {
-  max-width: 320px;  /* 从400px改为320px，使表单更窄 */
-  width: 40%;        /* 从90%改为75%，减少相对宽度 */
-  padding: 35px;     /* 从40px改为35px，稍微减少内边距 */
+  width: 36%;
+  height: 54%;
+  padding: 28px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
@@ -150,12 +151,12 @@ async function login() {
   box-sizing: border-box;
   position: relative;
 
-  /* 修复的宽度敏感缩放功能 */
-  transform: scale(clamp(0.3, (100vw+100vh) / 1200px, 2.0));
-  transform-origin: center;
+  /* 在原有缩放基础上再乘以0.8 */
+  transform: scale(calc(clamp(0.3, (60vw+60vh) / 1200px, 2.0) * 0.8));
+  transform-origin: left center;
   transition: transform 0.1s ease-out;
 
-  /* 移除会干扰缩放的尺寸限制 */
+  /* 确保在小屏幕上不会被裁剪 */
   min-width: unset;
   max-width: unset;
 }
@@ -163,17 +164,17 @@ async function login() {
 .login-form h1 {
   text-align: center;
   margin-top: 0;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   color: #333;
-  font-size: 28px;
+  font-size: 19.2px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 14.4px;
 }
 
 label {
-  font-size: 18px;
+  font-size: 12.8px;
   display: block;
   margin-bottom: 8px;
   color: #555;
@@ -182,7 +183,7 @@ label {
 
 input {
   width: 100%;
-  padding: 12px;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 16px;
@@ -234,7 +235,7 @@ input:focus {
 }
 
 .register-link{
-  margin-top: 30px;
+  margin-top: 4px;
   display: block;
   text-align: center;
 }
@@ -246,7 +247,7 @@ input:focus {
   }
 
   .login-form h1 {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   label {
@@ -254,14 +255,14 @@ input:focus {
   }
 
   input, .login-btn {
-    padding: 15px;
+    padding: 10px;
     font-size: 18px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .login-form {
-    padding: 40px;
+    padding: 10px;
   }
 
   .login-form h1 {
