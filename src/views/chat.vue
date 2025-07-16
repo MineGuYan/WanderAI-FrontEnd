@@ -355,7 +355,7 @@ onMounted(() => {
   </div>
 
   <!-- 展开的侧边栏 -->
-  <div v-show="!SidebarIsHiden">
+  <div class="open_sidebar" v-show="!SidebarIsHiden">
     <p>漫游精灵</p>
     <i class="iconfont icon-shouqicebianlan" @click="hideSidebar"></i>
     <i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i>
@@ -510,6 +510,17 @@ i{
   font-size: 40px;
 }
 
+
+.open_sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 100%;
+  background-color: #212327;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+  padding-top: 20px;
+}
 .chatting {
   text-align: center;
   margin: 20px auto;
