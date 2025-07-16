@@ -5,7 +5,8 @@ import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
 
 const username = ref('')
-const password = ref('')
+const password1 = ref('')
+const password2 = ref('')
 
 watch(username, (newValue) => {
   if (newValue.length > 20) {
@@ -14,7 +15,7 @@ watch(username, (newValue) => {
   }
 });
 
-watch(password, (newValue) => {
+watch(password1, (newValue) => {
   if( newValue.length > 6) {
 
   } else {
@@ -22,18 +23,36 @@ watch(password, (newValue) => {
   }
 
   if (newValue.length > 15) {
-    password.value = newValue.slice(0, 15);
+    password1.value = newValue.slice(0, 15);
+    alert("密码不能超过15个字符");
+  }
+});
+
+watch(password2, (newValue) => {
+  if( newValue.length > 6) {
+
+  } else {
+
+  }
+
+  if (newValue.length > 15) {
+    password2.value = newValue.slice(0, 15);
     alert("密码不能超过15个字符");
   }
 });
 
 async function register() {
-  if (username.value === '' || password.value === '') {
+  if (username.value === '' || password1.value === '') {
     alert('昵称和密码不能为空');
     return;
   }
 
-  const encryptedPassword = sha256(password.value)
+  if (password1.value !== password2.value) {
+    alert('两次输入的密码不一致，请重新输入');
+    return;
+  }
+
+  const encryptedPassword = sha256(password1.value)
 
   try {
     const response = await api.post('/user/register', {
@@ -63,8 +82,12 @@ async function register() {
         <input type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required>
       </div>
       <div>
-        <label for="password">密码：</label>
-        <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
+        <label for="password1">密码：</label>
+        <input type="password" id="password1" v-model="password1" placeholder="请输入密码..." required />
+      </div>
+      <div>
+        <label for="password2">确认密码：</label>
+        <input type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." required />
       </div>
       <button @click="register">注册</button>
       <router-link to="/login">已有账号，返回登录</router-link>
