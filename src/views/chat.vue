@@ -350,7 +350,7 @@ onMounted(() => {
       </template>
     </el-dropdown>
     <router-link to="/" class="button">
-      <i class="bottom iconfont icon-tuichu" title="返回主页"></i>
+      <i class="bottom iconfont icon-tuichu1" title="返回主页"></i>
     </router-link>
   </div>
 
@@ -394,7 +394,7 @@ onMounted(() => {
       </template>
     </el-dropdown>
     <router-link to="/" class="button">
-      <i class="bottom iconfont icon-tuichu"></i>
+      <i class="bottom iconfont icon-tuichu1"></i>
     </router-link>
   </div>
 
@@ -527,6 +527,7 @@ i{
   left: 50%;
   transform: translateX(-60%);
   bottom: 40px;
+  text-decoration: none;
 }
 .sidebar .button i {
   font-size: 40px;
@@ -537,7 +538,7 @@ i{
   position: fixed;
   top: 0;
   left: 0;
-  width: 160px;
+  width: 200px;
   height: 100%;
   background-color: #f0f4fb;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
@@ -606,6 +607,7 @@ i{
   left: 50%;
   transform: translateX(-60%);
   bottom: 40px;
+  text-decoration: none;
 }
 .open_sidebar .button i {
   font-size: 40px;
@@ -746,14 +748,14 @@ hr{
   bottom: 20px;
   left: 53%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 70%;
 }
 
 textarea {
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
-  width: 90%;
+  width: 100%;
   height: 100px;
   padding: 10px;
   padding-right: 60px;
