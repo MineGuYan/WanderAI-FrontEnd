@@ -78,7 +78,7 @@ async function register() {
   <div class="register-container">
     <AspectRatioBox class="register-form blur-bg" :aspect-ratio="100/115" :widthPercentage="36">
       <h1>注册</h1>
-      <form>
+      <form class="form">
         <div class="form-group">
           <label for="username">昵称：</label>
           <input type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required />
@@ -91,9 +91,11 @@ async function register() {
           <label for="password2">确认密码：</label>
           <input type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." required />
         </div>
+      </form>
+      <div class="actions">
         <button @click="register" type="button" class="register-btn">注册</button>
         <router-link to="/login" class="login-link">已有帐号，返回登录</router-link>
-      </form>
+      </div>
     </AspectRatioBox>
 
   </div>
@@ -166,18 +168,15 @@ async function register() {
 
   transform-origin: left center;
   transition: transform 0.1s ease-out;
-
-  /* 确保在小屏幕上不会被裁剪 */
-  min-width: unset;
-  max-width: unset;
 }
 
 .register-form h1 {
   text-align: center;
-  margin-top: 0px;
-  margin-bottom: 10px;
+  margin-top: 0;
   color: #333;
   font-size: 19.2px;
+  width: 100%;
+  height: 12%;
 
   /* 覆盖用户代理样式表的默认margin */
   margin-block-start: 2px;  /* 原来是0.67em，现在设为0.2em */
@@ -186,26 +185,35 @@ async function register() {
   padding-block-start: 0px; /* 原来是0.67em，现在设为0 */
   padding-block-end: 0px;   /* 原来是0.67em，现在设为0 */
 }
+.form {
+  width: 100% ;
+  height: 60%;
+}
 
 .form-group {
-  margin-bottom: 14.4px;
+  margin-bottom: 14px;
+  width: 100%;
+  height: 30%;
 }
 
 label {
-  font-size: 12.8px;
+  font-size: 12px;
   display: block;
   margin-bottom: 8px;
   color: #555;
   font-weight: 500;
+  width: 100%;
+  height: 34%;
 }
 
 input {
-  width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 16px;
   box-sizing: border-box;
+  width: 100%;
+  height: 54%;
 }
 
 input:focus {
@@ -213,9 +221,14 @@ input:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
+.actions {
+  width: 100%;
+  height: 28%;
+}
 
 .register-btn {
   width: 100%;
+  height: 40%;
   padding: 14px;
   background-color: #007bff;
   color: white;
@@ -253,7 +266,8 @@ input:focus {
 }
 
 .login-link{
-  margin-top: 4px;
+  width: 100%;
+  height: 50%;
   display: block;
   text-align: center;
 }

@@ -78,7 +78,7 @@ async function login() {
           <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
         </div>
       </form>
-      <div class="form-actions">
+      <div class="actions">
         <button @click="login" type="button" class="login-btn">登录</button>
         <router-link to="/register" class="register-link">注册新用户</router-link>
       </div>
@@ -177,7 +177,7 @@ async function login() {
   height: 45%;
 }
 
-.form-actions {
+.actions {
   width: 100%;
   height: 20%;
 }
