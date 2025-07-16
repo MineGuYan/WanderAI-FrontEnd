@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
+//@ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
 const userid = ref('');
@@ -67,7 +68,7 @@ async function login() {
   <div class="login-container">
     <AspectRatioBox class="login-form blur-bg" :aspect-ratio="20/19" :widthPercentage="36">
       <h1>登录</h1>
-      <form>
+      <form class="form">
         <div class="form-group">
           <label for="userid">账号：</label>
           <input type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
@@ -76,9 +77,9 @@ async function login() {
           <label for="password">密码：</label>
           <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
         </div>
-        <button @click="login" type="button" class="login-btn">登录</button>
-        <router-link to="/register" class="register-link">注册新用户</router-link>
       </form>
+      <button @click="login" type="button" class="login-btn">登录</button>
+      <router-link to="/register" class="register-link">注册新用户</router-link>
     </AspectRatioBox>
 
   </div>
@@ -142,7 +143,6 @@ async function login() {
 }
 
 .login-form {
-  width: 36%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
@@ -153,9 +153,6 @@ async function login() {
   transform-origin: left center;
   transition: transform 0.1s ease-out;
 
-  /* 确保在小屏幕上不会被裁剪 */
-  min-width: unset;
-  max-width: unset;
 }
 
 .login-form h1 {
@@ -163,28 +160,39 @@ async function login() {
   margin-top: 0;
   margin-bottom: 10px;
   color: #333;
-  font-size: 19.2px;
+  font-size: 19px;
+  width: 100%;
+  height: 10%;
 }
 
+.form {
+  width: 100%;
+  height: 54%;
+}
 .form-group {
-  margin-bottom: 14.4px;
+  margin-bottom: 14px;
+  width: 100%;
+  height: 45%;
 }
 
 label {
-  font-size: 12.8px;
+  font-size: 12px;
   display: block;
   margin-bottom: 8px;
   color: #555;
   font-weight: 500;
+  width:100%;
+  height:35%;
 }
 
 input {
-  width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 16px;
   box-sizing: border-box;
+  width: 100%;
+  height: 60%;
 }
 
 input:focus {
@@ -195,13 +203,14 @@ input:focus {
 
 .login-btn {
   width: 100%;
+  height: 15%;
   padding: 12px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   margin-top: 15px;
   margin-bottom: 20px;
@@ -232,6 +241,8 @@ input:focus {
 }
 
 .register-link{
+  width: 100%;
+  height: 10%;
   margin-top: 4px;
   display: block;
   text-align: center;
@@ -413,4 +424,5 @@ input:focus {
     background-position: center center !important;
   }
 }
+
 </style>
