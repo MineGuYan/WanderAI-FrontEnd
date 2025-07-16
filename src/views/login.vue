@@ -47,6 +47,8 @@ async function login() {
 
     if (response.data.code === 1) {
       localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('nickname', response.data.data.nickname);
+      localStorage.setItem('accountId', userid.value);
       alert(`欢迎，${response.data.data.nickname}！`);
       // 登录成功后可以跳转到其他页面
       await useRouter().push('/home');
