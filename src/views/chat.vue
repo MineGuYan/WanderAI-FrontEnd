@@ -356,10 +356,15 @@ onMounted(() => {
 
   <!-- 展开的侧边栏 -->
   <div class="open_sidebar" v-show="!SidebarIsHiden">
-    <p>漫游精灵</p>
-    <i class="iconfont icon-shouqicebianlan" @click="hideSidebar"></i>
-    <i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i>
-    <ul>
+    <div class="opensidebar-header">
+      <span class="opensidebar-title">漫游精灵</span>
+      <i class="iconfont icon-shouqicebianlan" @click="hideSidebar" title="关闭边栏"></i>
+    </div>
+    <div class="open_dialogue">
+      <i class="iconfont icon-duihuakuang" @click="createNewChat"></i>
+      <span class="open_dialogue_title">开启新对话</span>
+    </div>
+    <ul class="history-dialogue">
       历史对话
       <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)">
         {{ chat.title || '未命名对话' }}
@@ -368,9 +373,25 @@ onMounted(() => {
 <!--          </router-link>-->
       </li>
     </ul>
-    <div>
-      个人信息
-    </div>
+    <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
+      <span class="el-dropdown-link avatar">
+        用户
+      </span>
+      <!-- 下拉菜单内容 -->
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="settings">
+            <span>账户设置</span>
+          </el-dropdown-item>
+          <el-dropdown-item command="feedback">
+            <span>意见反馈</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided command="logout">
+            <span>退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
     <router-link to="/" class="button">
       <i class="bottom iconfont icon-tuichu"></i>
     </router-link>
@@ -517,10 +538,79 @@ i{
   left: 0;
   width: 160px;
   height: 100%;
-  background-color: #212327;
+  background-color: #f0f4fb;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
-  padding-top: 20px;
+  padding-top: 0; /* 移除原有的padding-top */
 }
+
+/* 新增的侧边栏头部样式 */
+.opensidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 15px;
+  height: 60px;
+  background-color: #007bff;
+  color: #fff;
+  border-bottom: 1px solid #0056b3;
+}
+
+.opensidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.opensidebar-header .iconfont {
+  font-size: 26px; /* 与标题相匹配的字体大小 */
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.opensidebar-header .iconfont:hover {
+  color: #ffd700; /* 悬停时变为金色 */
+}
+
+.open_dialogue {
+  width: 80%;
+  height: 6%;
+  margin: 20px auto 0 auto; /* 改为auto实现水平居中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /*气泡设置*/
+  border-radius: 18px;
+  background-color: #9cdbf1;
+}
+.open_dialogue i {
+  font-size: 34px;
+  color: #0095ff;
+  margin-right: 10px;
+}
+.open_dialogue_title {
+  font-size: 14px;
+  color: #007bff;
+}
+
+.history-dialogue {
+  position: absolute;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+}
+.open_sidebar .button{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-60%);
+  bottom: 40px;
+}
+.open_sidebar .button i {
+  font-size: 40px;
+}
+
+
 .chatting {
   text-align: center;
   margin: 20px auto;
