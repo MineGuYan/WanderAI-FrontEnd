@@ -537,7 +537,7 @@ i{
   position: fixed;
   top: 0;
   left: 0;
-  width: 160px;
+  width: 200px;
   height: 100%;
   background-color: #f0f4fb;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
@@ -747,14 +747,14 @@ hr{
   bottom: 20px;
   left: 53%;
   transform: translateX(-50%);
-  width: 80%;
+  width: 70%;
 }
 
 textarea {
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
-  width: 90%;
+  width: 100%;
   height: 100px;
   padding: 10px;
   padding-right: 60px;
