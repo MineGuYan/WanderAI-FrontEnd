@@ -143,7 +143,6 @@ async function login() {
 .login-form {
   width: 36%;
   height: 54%;
-  padding: 28px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
@@ -151,8 +150,6 @@ async function login() {
   box-sizing: border-box;
   position: relative;
 
-  /* 在原有缩放基础上再乘以0.8 */
-  transform: scale(calc(clamp(0.3, (60vw+60vh) / 1200px, 2.0) * 0.8));
   transform-origin: left center;
   transition: transform 0.1s ease-out;
 

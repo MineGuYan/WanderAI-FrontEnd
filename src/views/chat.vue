@@ -330,27 +330,25 @@ onMounted(() => {
       <li><i class="iconfont icon-duihuakuang" @click="createNewChat" title="开启新对话"></i></li>
     </ul>
     <!-- 用户下拉菜单 -->
-    <div>
-      <el-dropdown trigger="click" @command="handleCommand">
-        <span class="el-dropdown-link">
-          用户
-        </span>
-        <!-- 下拉菜单内容 -->
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="settings">
-              <span>账户设置</span>
-            </el-dropdown-item>
-            <el-dropdown-item command="feedback">
-              <span>意见反馈</span>
-            </el-dropdown-item>
-            <el-dropdown-item divided command="logout">
-              <span>退出登录</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div>
+    <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
+      <span class="el-dropdown-link avatar">
+        用户
+      </span>
+      <!-- 下拉菜单内容 -->
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="settings">
+            <span>账户设置</span>
+          </el-dropdown-item>
+          <el-dropdown-item command="feedback">
+            <span>意见反馈</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided command="logout">
+            <span>退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
     <router-link to="/" class="button">
       <i class="bottom iconfont icon-tuichu" title="返回主页"></i>
     </router-link>
@@ -485,14 +483,31 @@ i{
   color: #0ce5bb;
   cursor: pointer;
 }
+.sidebar .icon-ai {
+  font-size: 45px;
+}
+.user-settingmenu {
+  /*将元素的位置设为绝对定位，相对于其最近的定位父元素进行定位*/
+  position: absolute;
+  top: 80vh;
+  /*vh是视口高度的单位，即整个显示界面的高度共100vh*/
+  left:50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+.user-settingmenu .avatar {
+  background-color: #0ce5bb;
+  color: #f8f8f8;
+  border-color: #0ce8ad;
+}
 .sidebar .button{
   position: absolute;
-  text-align: center;
-  bottom: 80px;
+  left: 50%;
+  transform: translateX(-60%);
+  bottom: 40px;
 }
 .sidebar .button i {
   font-size: 40px;
-  margin-left: 20px;
 }
 
 .chatting {

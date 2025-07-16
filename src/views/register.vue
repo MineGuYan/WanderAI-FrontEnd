@@ -55,23 +55,354 @@ async function register() {
 </script>
 
 <template>
-  <div>
-    <h1>注册</h1>
-    <form>
-      <div>
-        <label for="username">昵称：</label>
-        <input type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required>
-      </div>
-      <div>
-        <label for="password">密码：</label>
-        <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
-      </div>
-      <button @click="register">注册</button>
-      <router-link to="/login">已有账号，返回登录</router-link>
-    </form>
+  <div class="register-container">
+    <div class="register-form blur-bg">
+      <h1>注册</h1>
+      <form>
+        <div class="form-group">
+          <label for="username">账号：</label>
+          <input type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required />
+        </div>
+        <div class="form-group">
+          <label for="password">密码：</label>
+          <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
+        </div>
+        <button @click="register" type="button" class="register-btn">注册</button>
+        <router-link to="/login" class="login-link">已有帐号，返回登录</router-link>
+      </form>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
+/* 重置全局样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+/* 确保html和body完全占满屏幕 */
+:global(html), :global(body) {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* 主容器样式 - 确保背景图片完全显示 */
+/*将 background-size: cover 改为 background-size: 100% 100%
+这确保背景图片会拉伸以完全填满容器，不会有任何部分被裁剪
+使用绝对定位确保容器完全占满屏幕
+同时设置了top、left、right、bottom为0*/
+.register-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/img/loginback1.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 10%;
+  overflow: hidden;
+}
+
+/* 备用背景样式 - 确保在任何情况下都能铺满 */
+.register-container::before {
+  /*创建了一个伪元素作为备用背景，确保即使主背景有问题，也能正常显示*/
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/img/loginback1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.register-form {
+  width: 36%;
+  height: 54%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.35);
+  z-index: 10;
+  box-sizing: border-box;
+  position: relative;
+
+  transform-origin: left center;
+  transition: transform 0.1s ease-out;
+
+  /* 确保在小屏幕上不会被裁剪 */
+  min-width: unset;
+  max-width: unset;
+}
+
+.register-form h1 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 19.2px;
+}
+
+.form-group {
+  margin-bottom: 14.4px;
+}
+
+label {
+  font-size: 12.8px;
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+  transform: translateY(0);
+}
+
+/* 鼠标悬停时的效果 */
+.register-btn:hover {
+  background-color: #0678d5;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  transform: translateY(-3px);
+}
+
+/* 按钮按下时的效果 */
+.register-btn:active {
+  background-color: #015cb9;
+  box-shadow: 0 1px 3px rgba(0, 123, 255, 0.3);
+  transform: translateY(0);
+  transition: all 0.1s ease;
+}
+
+/*添加蓝色聚焦环*/
+.register-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.login-link{
+  margin-top: 4px;
+  display: block;
+  text-align: center;
+}
+
+/* 简化响应式设计 - 只调整内容样式，不覆盖尺寸 */
+@media (min-width: 1200px) {
+  .register-form {
+    padding: 50px;
+  }
+
+  .register-form h1 {
+    font-size: 28px;
+  }
+
+  label {
+    font-size: 20px;
+  }
+
+  input, .register-btn {
+    padding: 10px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .register-form {
+    padding: 10px;
+  }
+
+  .register-form h1 {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .register-form {
+    padding: 30px;
+  }
+
+  .register-form h1 {
+    font-size: 26px;
+    margin-bottom: 25px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input, .register-btn {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* 小屏设备 - 移除所有尺寸覆盖 */
+@media (max-width: 575px) {
+  .register-form {
+    padding: 25px;
+  }
+
+  .register-form h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  input, .register-btn {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .register-btn {
+    margin-top: 12px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .register-form {
+    padding: 20px;
+  }
+
+  .register-form h1 {
+    font-size: 22px;
+  }
+
+  input, .register-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+}
+
+/* 高度较小的屏幕适配 */
+@media (max-height: 600px) {
+  .register-container {
+    background-size: 100% 100%;
+  }
+
+  .register-form {
+    padding: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .register-form h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  input, .register-btn {
+    padding: 10px;
+  }
+}
+
+/* 横屏模式下的特殊处理 */
+@media (orientation: landscape) and (max-height: 500px) {
+  .register-container {
+    background-size: 100% 100%;
+  }
+
+  .register-form {
+    padding: 15px;
+    max-width: 350px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .register-form h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  input, .register-btn {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+/* 强制背景铺满 - 适用于所有屏幕比例 */
+@media screen {
+  .register-container {
+    background-size: 100% 100% !important;
+  }
+}
+
+/* 确保在极端宽屏下也能正常显示 */
+@media (min-aspect-ratio: 21/9) {
+  .register-container {
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+  }
+}
+
+/* 确保在极端竖屏下也能正常显示 */
+@media (max-aspect-ratio: 9/16) {
+  .register-container {
+    background-size: 100% 100% !important;
+    background-position: center center !important;
+  }
+}
 </style>
