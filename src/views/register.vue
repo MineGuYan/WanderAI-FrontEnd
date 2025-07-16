@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
+// @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
 const username = ref('')
@@ -81,15 +82,15 @@ async function register() {
       <form class="form">
         <div class="form-group">
           <label for="username">昵称：</label>
-          <input type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required />
+          <el-input class="input" type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required />
         </div>
         <div class="form-group">
           <label for="password1">密码：</label>
-          <input type="password" id="password1" v-model="password1" placeholder="请输入密码..." required />
+          <el-input class="input" type="password" id="password1" v-model="password1" placeholder="请输入密码..." show-password required />
         </div>
         <div class="form-group">
           <label for="password2">确认密码：</label>
-          <input type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." required />
+          <el-input class="input" type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." show-password required />
         </div>
       </form>
       <div class="actions">
@@ -206,12 +207,8 @@ label {
   height: 34%;
 }
 
-input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.input {
   font-size: 16px;
-  box-sizing: border-box;
   width: 100%;
   height: 54%;
 }

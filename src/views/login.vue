@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
-//@ts-ignore
+// @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
 const userid = ref('');
@@ -71,11 +71,11 @@ async function login() {
       <form class="form">
         <div class="form-group">
           <label for="userid">账号：</label>
-          <input type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
+          <el-input class="input" type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
         </div>
         <div class="form-group">
           <label for="password">密码：</label>
-          <input type="password" id="password" v-model="password" placeholder="请输入密码..." required />
+          <el-input class="input" type="password" id="password" v-model="password" placeholder="请输入密码..." show-password required />
         </div>
       </form>
       <div class="actions">
@@ -192,12 +192,8 @@ label {
   height:30%;
 }
 
-input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.input {
   font-size: 16px;
-  box-sizing: border-box;
   width: 100%;
   height: 45%;
 }
