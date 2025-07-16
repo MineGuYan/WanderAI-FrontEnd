@@ -164,17 +164,17 @@ async function login() {
   color: #333;
   font-size: 19px;
   width: 100%;
-  height: 10%;
+  height: 14%;
 }
 
 .form {
   width: 100%;
-  height: 60%;
+  height: 54%;
 }
 .form-group {
   margin-bottom: 14px;
   width: 100%;
-  height: 40%;
+  height: 45%;
 }
 
 .form-actions {
@@ -210,7 +210,7 @@ input:focus {
 
 .login-btn {
   width: 100%;
-  height: 50%;
+  height: 60%;
   padding: 12px;
   background-color: #007bff;
   color: white;
