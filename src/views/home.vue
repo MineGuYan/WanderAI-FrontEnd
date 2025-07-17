@@ -209,7 +209,7 @@ onMounted(() => {
   color: #666;
   font-size: 18px;
   line-height: 1.5;
-  margintop: 12px;
+  margin-top: 12px;
 }
 
 .iconfont.icon-atm-fill {

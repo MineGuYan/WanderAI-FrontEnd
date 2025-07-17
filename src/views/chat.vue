@@ -374,11 +374,11 @@ onMounted(() => {
       </li>
     </ul>
     <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
-      <div>
+      <div class="user-information">
         <span class="el-dropdown-link avatar">
           用户
         </span>
-        <span>个人信息</span>
+        <span class="personal_information">个人信息</span>
       </div>
       <!-- 下拉菜单内容 -->
       <template #dropdown>
@@ -396,7 +396,8 @@ onMounted(() => {
       </template>
     </el-dropdown>
     <router-link to="/" class="button">
-      <i class="bottom iconfont icon-tuichu1"></i>返回主页
+      <i class="bottom iconfont icon-tuichu1"></i>
+      <span>返回主页</span>
     </router-link>
   </div>
 
@@ -604,15 +605,44 @@ i{
   left:50%;
   transform:translateX(-50%);
 }
+.open_sidebar .user-settingmenu{
+  width:100%;
+}
+.user-information {
+  width:100%;
+  display:flex;
+  /*主轴对齐*/
+  justify-content: center;
+  /*交叉轴对齐*/
+  align-items: center;
+  gap: 10px;
+  cursor:pointer;
+}
+.open_sidebar .personal_information{
+  font-size: 18px;
+  color: #000000;
+}
 .open_sidebar .button{
+  width:100%;
   position: absolute;
   left: 50%;
-  transform: translateX(-60%);
-  bottom: 40px;
+  transform: translateX(-50%);
+  bottom: 20px;
   text-decoration: none;
+  display:flex;
+   /*主轴对齐*/
+  justify-content: center;
+  /*交叉轴对齐*/
+  align-items: center;
+  gap: 20px;
+  cursor:pointer;
 }
 .open_sidebar .button i {
-  font-size: 40px;
+  font-size: 46px;
+}
+.open_sidebar .button span {
+  font-size: 18px;
+  color: #000000;
 }
 
 
@@ -757,7 +787,7 @@ textarea {
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
-  width: 100%;
+  width: 90%;
   height: 100px;
   padding: 10px;
   padding-right: 60px;
