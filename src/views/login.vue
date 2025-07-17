@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import api from '../api/request.ts';
-import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
 import {ElMessageBox} from "element-plus";
 // @ts-ignore
@@ -61,13 +60,12 @@ async function login() {
       localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('nickname', response.data.data.nickname);
       localStorage.setItem('accountId', userid.value);
-      alert(`欢迎，${response.data.data.nickname}！`);
       await ElMessageBox.alert(`欢迎，${response.data.data.nickname}！`, '提示', {
         confirmButtonText: '确定',
         type: 'success'
       });
       // 登录成功后可以跳转到其他页面
-      await useRouter().push('/home');
+      window.location.href = "/";
     } else {
       await ElMessageBox.alert('登录失败，请稍后再试', '提示', {
         confirmButtonText: '确定',

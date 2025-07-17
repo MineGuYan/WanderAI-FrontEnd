@@ -10,7 +10,7 @@ import type {HistoryChat, message, StreamResult, HistoryMessage, TravelPlan} fro
 import {ElMessageBox} from "element-plus";
 import TravelPlanBox from "../components/TravelPlanBox.vue";
 
-let sessionId: string
+let sessionId: string = ''
 let chatting: boolean = false
 const SidebarIsHiden = ref(true)
 const uerInput = ref('')
@@ -24,18 +24,40 @@ const accountId = ref(localStorage.getItem('accountId') || '未设置账号');
 const feedbackContent = ref('');
 
 async function createSession() {
-  const response = await api.get("/chat/create")
-  sessionId = response.data.data.sessionId
+  try{
+    const response = await api.get("/chat/create")
+    sessionId = response.data.data.sessionId
+  } catch (error) {
+    sessionId = ''
+    await ElMessageBox.alert('创建会话失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'error'
+    })
+  }
+
 }
 
 async function getHistoryChats() {
-  const response = await api.get("/history/chatList")
-  historyChats.value = response.data.data as HistoryChat[]
+  try {
+    const response = await api.get("/history/chatList")
+    historyChats.value = response.data.data as HistoryChat[]
+  } catch (error) {
+    historyChats.value = []
+    console.error('获取历史对话失败:', error)
+    await ElMessageBox.alert('获取历史对话失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'error'
+    })
+  }
 }
 
 async function sendMessage() {
   if (uerInput.value === '')return
   if (chatting)return
+
+  if (sessionId === '') {
+    await createSession()
+  }
 
   messages.value.push({
     userText: uerInput.value,
@@ -53,7 +75,7 @@ async function sendMessage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // "Authentication": localStorage.getItem('token'),
+        "Authentication": localStorage.getItem('token') as string,
         Accept: "text/event-stream",
       },
       body: JSON.stringify({
@@ -91,8 +113,9 @@ async function sendMessage() {
             content+=data.content;
             messages.value[messages.value.length - 1].aiText = marked(content) as string
           } else if (data.type === "plan") {
-
+            messages.value[messages.value.length - 1].aiText = `正在${data.content}中...`
           } else if (data.type === "all") {
+            messages.value[messages.value.length - 1].isLoading = false
             messages.value[messages.value.length - 1].aiText = data.content as TravelPlan
           } else if (data.type === "end") {
             break
@@ -104,9 +127,9 @@ async function sendMessage() {
       }
     }
   }catch (error){
+    console.error(error)
     messages.value[messages.value.length - 1].isLoading = false
     messages.value[messages.value.length - 1].aiText = '<span style="color: red;">服务器繁忙，请稍后再试。</span>'
-    console.error(error)
   }finally {
     chatting = false
   }
@@ -123,7 +146,7 @@ async function getTitle() {
         sessionId: sessionId
       }
     })
-    if (response.data.code === 200) {
+    if (response.data.code === 1) {
       title.value = response.data.data.title || '未命名对话';
     } else {
       console.error('获取标题失败:', response.data.message);
@@ -137,24 +160,34 @@ async function getChatHistory(chat: HistoryChat) {
   if (!chat) return
   sessionId = chat.sessionId
   title.value = chat.title
-  const response = await api.get('/history/chatContent',{
-    params: {
-      sessionId: sessionId
+  try {
+    const response = await api.get('/history/chatContent',{
+      params: {
+        sessionId: sessionId
+      }
+    })
+    messages.value=[]
+    const history = response.data.data as HistoryMessage[]
+    if (history.length === 0) return
+    for (const item of history) {
+      if (item.type === 'chat') {
+        messages.value[messages.value.length - 1].aiText = marked(item.message as string) as string
+      } else if (item.type === 'human') {
+        messages.value.push({
+          userText: item.message as string,
+          isLoading: false,
+          aiText: ''
+        })
+      } else {
+        messages.value[messages.value.length - 1].aiText = item.message as TravelPlan
+      }
     }
-  })
-  messages.value=[]
-  const history = response.data.data as HistoryMessage[]
-  for (const item of history) {
-    if (item.type === 'ai') {
-      messages.value[messages.value.length - 1].aiText = marked(item.content) as string
-    } else {
-      messages.value.push({
-        userText: item.content,
-        isLoading: false,
-        aiText: ''
-      })
-      continue
-    }
+  } catch (error) {
+    console.error('获取历史对话内容失败:', error)
+    await ElMessageBox.alert('获取历史对话内容失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'error'
+    })
   }
 }
 
@@ -175,8 +208,9 @@ function handleShiftEnter() {
   // 允许换行
 }
 
-function createNewChat(){
-  createSession()
+async function createNewChat(){
+  await createSession()
+  await getHistoryChats()
   messages.value=[]
 }
 
@@ -313,7 +347,6 @@ watch(nickname, (newValue) => {
 });
 
 onMounted(() => {
-  createSession()
   getHistoryChats()
 
   marked.use(markedHighlight({
@@ -413,7 +446,7 @@ onMounted(() => {
       <span class="iconfont icon-ai"></span>
       <h1>漫游精灵——WanderAI</h1>
     </div>
-    <p>你好，我是你的AI助手！请问有什么可以帮助你的吗？</p>
+    <p>你好，我是你的旅行规划助手！请问有什么可以帮助你的吗？</p>
     <hr>
     <div v-for="message in messages">
       <div class="message-container user-message">
