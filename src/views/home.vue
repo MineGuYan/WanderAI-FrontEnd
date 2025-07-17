@@ -121,13 +121,6 @@ onMounted(() => {
   z-index: 2;
 }
 
-.iconfont.icon-atm-fill {
-  margin-top: 5px;
-  color: #e35e5e;
-  font-size: 24px;
-  margin-right: 5px;
-}
-
 /* 新增的更新公告文字样式 */
 .update-notice {
   font-size: 32px;
@@ -169,7 +162,7 @@ onMounted(() => {
   padding: 0;
   width: 100%;
   display: flex;
-  color: #ec3939;
+  color: #4beccc;
   font-size: 24px;
   text-align: center;
   margin-top: 15px;
@@ -219,8 +212,15 @@ onMounted(() => {
   margintop: 12px;
 }
 
+.iconfont.icon-atm-fill {
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 26px;
+  margin-right: 5px;
+}
+
 .teammate {
-  color: #f42929;
+  color: #94a3b8;
   font-size: 20px;
   display: flex;
   align-items: center;
