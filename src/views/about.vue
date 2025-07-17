@@ -89,19 +89,28 @@ import "../assets/iconfont/iconfont.css"
   align-items: center;
 }
 .reback-button {
-  width:10%;
+  width: 8%;
   height: 40px;
-  text-align: center;
-  color: #6a6565;
-  font-size: 16px;
+  display: flex;
+  /*垂直居中*/
+  align-items: center;
+  /*水平居中*/
+  justify-content: center;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 500;
   cursor: pointer;
   position: absolute;
-  top: 0;
-  right: 10px;
+  top: 10px;
+  right: 20px;
   text-decoration-line: none;
   /*气泡设置*/
   border-radius:12px;
-  background-color: #0ce5bb;
+  background-color: #5ba4ea;
+}
+.reback-button:hover{
+  background-color: #4a8cd6;
+  color: #ffffff;
 }
 .iconfont{
   color: #0694ec;
