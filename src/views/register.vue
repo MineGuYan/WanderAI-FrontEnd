@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
+import { ElMessageBox } from "element-plus";
 // @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
@@ -13,7 +14,10 @@ const password2 = ref('')
 watch(username, (newValue) => {
   if (newValue.length > 20) {
     username.value = newValue.slice(0, 20);
-    alert("昵称不能超过20个字符");
+    ElMessageBox.alert('昵称不能超过20个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 });
 
@@ -26,7 +30,10 @@ watch(password1, (newValue) => {
 
   if (newValue.length > 15) {
     password1.value = newValue.slice(0, 15);
-    alert("密码不能超过15个字符");
+    ElMessageBox.alert('密码不能超过15个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 });
 
@@ -39,18 +46,27 @@ watch(password2, (newValue) => {
 
   if (newValue.length > 15) {
     password2.value = newValue.slice(0, 15);
-    alert("密码不能超过15个字符");
+    ElMessageBox.alert('密码不能超过15个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 });
 
 async function register() {
   if (username.value === '' || password1.value === '') {
-    alert('昵称和密码不能为空');
+    await ElMessageBox.alert('昵称和密码不能为空', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
     return;
   }
 
   if (password1.value !== password2.value) {
-    alert('两次输入的密码不一致，请重新输入');
+    await ElMessageBox.alert('两次输入的密码不一致，请重新输入', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
     return;
   }
 
@@ -63,14 +79,22 @@ async function register() {
     });
 
     if (response.data.code === 1) {
-      alert('注册成功！\n您的账号为：' + response.data.data.accountId);
+      await ElMessageBox.alert('注册成功！\n您的账号为：' + response.data.data.accountId, '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
       await useRouter().push('/login');
     } else {
-      alert('注册失败，请稍后再试');
+      await ElMessageBox.alert('注册失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+      });
     }
   } catch (error) {
-    console.error('注册请求失败:', error);
-    alert('注册请求失败，请稍后再试');
+    await ElMessageBox.alert('注册请求失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 }
 </script>
