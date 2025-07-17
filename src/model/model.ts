@@ -1,12 +1,12 @@
 export interface message {
   userText: string,
   isLoading: boolean,
-  aiText: string
+  aiText: string | TravelPlan
 }
 
 export interface StreamResult {
-  type: "chunk" | "end" | "error",
-  content: string
+  type: "chat" | "plan" | "all" | "end" | "error",
+  content: string | TravelPlan
 }
 
 export interface HistoryChat {

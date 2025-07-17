@@ -49,6 +49,7 @@ function isAuthenticated() {
 }
 
 // 全局前置守卫
+// @ts-ignore
 router.beforeEach((to, from, next) => {
   // 检查目标路由是否需要认证
   if (to.matched.some(record => record.meta.requiresAuth)) {
