@@ -24,6 +24,10 @@ const routes = [
         component: () => import('../views/about.vue')
     },
     {
+        path: '/demo',
+        component: () => import('../views/demo.vue'),
+    },
+    {
         path: '/404',
         component: () => import('../views/notFound.vue')
     },
@@ -45,6 +49,7 @@ function isAuthenticated() {
 }
 
 // 全局前置守卫
+// @ts-ignore
 router.beforeEach((to, from, next) => {
   // 检查目标路由是否需要认证
   if (to.matched.some(record => record.meta.requiresAuth)) {

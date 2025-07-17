@@ -6,8 +6,9 @@ import { marked } from "marked";
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import type {HistoryChat, message, StreamResult, HistoryMessage} from "../model/model.ts";
+import type {HistoryChat, message, StreamResult, HistoryMessage, TravelPlan} from "../model/model.ts";
 import {ElMessageBox} from "element-plus";
+import TravelPlanBox from "../components/TravelPlanBox.vue";
 
 let sessionId: string
 let chatting: boolean = false
@@ -85,10 +86,14 @@ async function sendMessage() {
         if (line.startsWith("data: ")) {
           const data = JSON.parse(line.slice(6)) as StreamResult;
 
-          if (data.type === "chunk") {
+          if (data.type === "chat") {
             // 追加内容到AI消息
             content+=data.content;
             messages.value[messages.value.length - 1].aiText = marked(content) as string
+          } else if (data.type === "plan") {
+
+          } else if (data.type === "all") {
+            messages.value[messages.value.length - 1].aiText = data.content as TravelPlan
           } else if (data.type === "end") {
             break
           } else if (data.type === "error") {
@@ -418,7 +423,11 @@ onMounted(() => {
       <div class="message-container ai-message">
         <span class="avatar ai-avatar">AI</span>
         <span v-show="message.isLoading" class="loading-spinner"></span>
-        <span v-show="!message.isLoading" class="bubble ai-bubble" v-html="message.aiText" ></span>
+<!--        <span v-show="!message.isLoading" class="bubble ai-bubble" v-html="message.aiText" ></span>-->
+        <span v-show="!message.isLoading" class="bubble ai-bubble">
+          <span v-if="typeof message.aiText === 'string'" v-html="message.aiText"></span>
+          <travel-plan-box v-else :travel-plan="message.aiText as TravelPlan" />
+        </span>
       </div>
     </div>
     <div class="write-block"></div>
