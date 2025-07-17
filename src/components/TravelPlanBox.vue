@@ -32,6 +32,24 @@ const getMapUrl = (attractionName: string) => {
   const mapItem = props.travelPlan.attraction_maps.find((item: AttractionMap) => item.attraction === attractionName)
   return mapItem ? mapItem.static_map_url : null
 }
+
+// 滚动到指定的section
+async function scrollToContent(index: number) {
+  if (!(index in activeDetails.value)) {
+    activeDetails.value = [index as never]
+    setTimeout(() => {
+      const element = document.getElementById(`content-${index}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    },350)
+  } else {
+    const element = document.getElementById(`content-${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
 </script>
 
 <template>
@@ -84,6 +102,7 @@ const getMapUrl = (attractionName: string) => {
                 :key="index"
                 type="info"
                 class="attraction-tag"
+                @click="scrollToContent(index)"
               >
                 {{ attraction }}
               </el-tag>
@@ -135,7 +154,7 @@ const getMapUrl = (attractionName: string) => {
                   :title="detail.attraction"
                   :name="index"
                 >
-                  <div class="detail-content">
+                  <div class="detail-content" :id="'content-'+index">
                     <p><span class="label">地址:</span> {{ detail.address }}</p>
                     <p><span class="label">坐标:</span> {{ detail.coordinates }}</p>
                     <p><span class="label">介绍:</span> {{ detail.introduction }}</p>
