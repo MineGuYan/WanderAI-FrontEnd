@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import api from '../api/request.ts';
-import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
 import { ElMessageBox } from "element-plus";
 // @ts-ignore
@@ -79,11 +78,12 @@ async function register() {
     });
 
     if (response.data.code === 1) {
-      await ElMessageBox.alert('注册成功！\n您的账号为：' + response.data.data.accountId, '提示', {
+      await ElMessageBox.alert('恭喜注册成功，请牢记账号！<br>您的账号为：<br>' + response.data.data.accountId, '提示', {
         confirmButtonText: '确定',
-        type: 'success'
+        type: 'success',
+        dangerouslyUseHTMLString: true
       });
-      await useRouter().push('/login');
+      window.location.href = "/login";
     } else {
       await ElMessageBox.alert('注册失败，请稍后再试', '提示', {
         confirmButtonText: '确定',

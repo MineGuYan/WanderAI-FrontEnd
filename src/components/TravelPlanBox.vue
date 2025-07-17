@@ -96,9 +96,9 @@ const getMapUrl = (attractionName: string) => {
                   <h3>路线规划</h3>
                 </div>
               </template>
-              <div class="route-item" v-for="(route, index) in getExecutorResult(day.day)?.routes" :key="index">
-                <el-steps direction="vertical" :active="1">
-                  <el-step>
+              <div class="route-item" >
+                <el-steps direction="vertical" :active="getExecutorResult(day.day)?.routes.length">
+                  <el-step v-for="(route, index) in getExecutorResult(day.day)?.routes" :key="index">
                     <template #title>
                       <div class="route-title">
                         <span class="route-index">第{{ index + 1 }}段</span>

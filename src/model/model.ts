@@ -15,8 +15,8 @@ export interface HistoryChat {
 }
 
 export interface HistoryMessage {
-  type: "ai" | "human",
-  content: string
+  type: "chat" | "plan" | "human",
+  message: string | TravelPlan
 }
 
 export interface HotSpot {
