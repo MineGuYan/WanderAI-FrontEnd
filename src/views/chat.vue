@@ -793,6 +793,7 @@ hr{
 }
 
 textarea {
+  z-index:1000;
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
