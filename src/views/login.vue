@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import api from '../api/request.ts';
 import { useRouter } from "vue-router";
 import { sha256 } from 'js-sha256'
+import {ElMessageBox} from "element-plus";
 // @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
@@ -18,7 +19,10 @@ watch(userid, (newValue) => {
 
   if (newValue.length > 20) {
     userid.value = newValue.slice(0, 20);
-    alert("账号不能超过20个字符");
+    ElMessageBox.alert('账号不能超过20个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 });
 
@@ -29,13 +33,19 @@ watch(password, (newValue) => {
 
   if (newValue.length > 15) {
     password.value = newValue.slice(0, 15);
-    alert("密码不能超过15个字符");
+    ElMessageBox.alert('密码不能超过15个字符', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 });
 
 async function login() {
   if (userid.value === '' || password.value === '') {
-    alert('账号和密码不能为空');
+    await ElMessageBox.alert('账号和密码不能为空', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
     return;
   }
 
@@ -52,14 +62,23 @@ async function login() {
       localStorage.setItem('nickname', response.data.data.nickname);
       localStorage.setItem('accountId', userid.value);
       alert(`欢迎，${response.data.data.nickname}！`);
+      await ElMessageBox.alert(`欢迎，${response.data.data.nickname}！`, '提示', {
+        confirmButtonText: '确定',
+        type: 'success'
+      });
       // 登录成功后可以跳转到其他页面
       await useRouter().push('/home');
     } else {
-      alert('登录失败，请稍后再试');
+      await ElMessageBox.alert('登录失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+      });
     }
   } catch (error) {
-    console.error('登录请求失败:', error);
-    alert('登录请求失败，请稍后再试');
+    await ElMessageBox.alert('登录请求失败，请稍后再试', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    });
   }
 }
 </script>
