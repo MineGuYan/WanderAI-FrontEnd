@@ -240,8 +240,11 @@ async function scrollToContent(index: number) {
 }
 
 .attraction-tag {
+  font-size: 14px;
+  color: #404143;
   margin-right: 10px;
   margin-bottom: 10px;
+  background-color: #8de3cd;
 }
 
 .route-item {
@@ -267,6 +270,15 @@ async function scrollToContent(index: number) {
 .route-desc {
   padding-left: 20px;
 }
+
+.details-card :deep(.el-collapse-item__header) {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1fec7e;
+}
+/*当给 el-collapse-item 添加 class="place" 时，这个类确实被添加到了组件上，但实际显示标题的元素是组件内部的 .el-collapse-item__header 元素
+所以不应该用这种方法，可用:deep() 选择器，其允许样式穿透组件的封装，直接影响到组件内部的元素。
+ */
 
 .label {
   font-weight: bold;
