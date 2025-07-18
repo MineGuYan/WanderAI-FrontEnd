@@ -94,17 +94,18 @@ async function register() {
           closeOnClickModal: false,
           closeOnPressEscape: false,
           dangerouslyUseHTMLString: true,
+          // @ts-ignore
           beforeClose: (action, instance, done) => {
             if (action === 'cancel') {
               // 点击复制按钮的逻辑
               navigator.clipboard.writeText(response.data.data.accountId)
-                  .then(() => {
-                    ElMessage.success('账号已复制到剪贴板')
-                  })
-                  .catch(err => {
-                    ElMessage.error('复制失败，请手动复制')
-                    console.error('复制失败:', err)
-                  })
+                .then(() => {
+                  ElMessage.success('账号已复制到剪贴板')
+                })
+                .catch(err => {
+                  ElMessage.error('复制失败，请手动复制')
+                  console.error('复制失败:', err)
+                })
               // 不自动关闭，让用户点击确定关闭
             } else if (action === 'confirm') {
               // 点击确定按钮，关闭弹窗
