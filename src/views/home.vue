@@ -15,6 +15,7 @@ const colors = [
 ]
 const currentColorIndex = ref(0)
 const HotSpots = ref<HotSpot[]>([])
+const refreshing = ref(false)
 
 function getCharColor(index: number) {
   // 根据索引和当前颜色索引返回颜色，从左往右变换
@@ -36,6 +37,7 @@ async function getHotSpots() {
 }
 
 async function refreshHotSpots() {
+  refreshing.value = true
   try {
     const response = await api.get("/hotspot",{
       params: {
@@ -45,6 +47,8 @@ async function refreshHotSpots() {
     HotSpots.value = response.data.data as HotSpot[]
   } catch (error) {
     console.error("刷新热门景点失败:", error)
+  } finally {
+    refreshing.value = false
   }
 }
 
@@ -83,7 +87,7 @@ onMounted(() => {
     <div class="recommendation">
       <h3 class="recommendation-title">热门景点推荐</h3>
       <div @click="refreshHotSpots"><el-icon><Refresh /></el-icon></div>
-      <div class="recommendation-list">
+      <div v-loading="refreshing" :style="{ overflow: refreshing ? 'hidden' : 'auto' }" class="recommendation-list">
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
           <SafeImg :url="hs.image"></SafeImg>

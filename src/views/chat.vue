@@ -125,7 +125,7 @@ async function sendMessage() {
             const data = JSON.parse(dataStr) as StreamResult;
 
             if (data.type === "all") {
-              // ���功解析完整的大JSON数据
+              // 功解析完整的大JSON数据
               messages.value[messages.value.length - 1].isLoading = false;
               messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
               isLargeJson = false;
@@ -452,17 +452,17 @@ onMounted(() => {
       <span class="opensidebar-title">漫游精灵</span>
       <i class="iconfont icon-shouqicebianlan" @click="hideSidebar" title="关闭边栏"></i>
     </div>
-    <div class="open_dialogue">
-      <i class="iconfont icon-duihuakuang" id="newChatButton" @click="createNewChat"></i>
-      <label class="open_dialogue_title" for="newChatButton">开启新对话</label>
+    <div class="open_dialogue" @click="createNewChat">
+      <i class="iconfont icon-duihuakuang"></i>
+      <label class="open_dialogue_title">开启新对话</label>
     </div>
     <ul class="history-dialogue">
       历史对话
-      <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)">
+      <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)" :title="chat.title || '未命名对话'">
         {{ chat.title || '未命名对话' }}
       </li>
     </ul>
-    <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
+    <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand">
       <div class="user-information">
         <span class="el-dropdown-link avatar">
           用户
@@ -690,6 +690,7 @@ i{
 .open_dialogue_title {
   font-size: 14px;
   color: #007bff;
+  cursor: pointer;
 }
 
 .history-dialogue {
