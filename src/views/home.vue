@@ -197,7 +197,7 @@ onMounted(() => {
 
 .recommendation{
   max-width: 1200px;
-  margin: 15px auto;
+  margin: 10px auto;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
@@ -247,7 +247,7 @@ onMounted(() => {
 
 .recommendation-list {
   width: 100%;
-  max-height: 400px;
+  max-height: 440px;
   max-width: 1200px;
   overflow-y: auto;
   padding: 10px 0;

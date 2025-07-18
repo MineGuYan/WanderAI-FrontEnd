@@ -490,7 +490,6 @@ onMounted(() => {
     </router-link>
   </div>
 
-  <div v-if="title!==''">{{title}}</div>
 
   <div class="chatting">
     <div class="header-container">
@@ -499,6 +498,7 @@ onMounted(() => {
     </div>
     <p>你好，我是你的旅行规划助手！请问有什么可以帮助你的吗？</p>
     <hr>
+    <div v-if="title!==''" class="dialog_title">{{title}}</div>
     <div v-for="message in messages">
       <div class="message-container user-message">
         <span class="bubble user-bubble">{{ message.userText }}</span>
@@ -827,6 +827,11 @@ i{
 }
 hr{
   margin-bottom: 20px;
+}
+.dialog_title{
+  font-size:34px;
+  font-weight:600;
+  color: #006fff;
 }
 
 
