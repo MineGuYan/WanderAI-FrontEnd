@@ -520,7 +520,7 @@ onMounted(() => {
   </div>
 
   <div class="input-box">
-    <textarea placeholder="向AI助手发送信息..."
+    <textarea placeholder=" 向AI助手发送信息..."
               v-model="uerInput"
               @keydown.enter.exact="handleEnter"
               @keydown.shift.enter="handleShiftEnter"></textarea>
@@ -950,8 +950,11 @@ textarea {
   width: 90%;
   height: 100px;
   margin: 0;
-  padding-left: 0;
+  padding-left: 4px; /* 添加左内边距，相当于两个空格的宽度 */
   box-sizing: border-box;
+  /*使用 box-sizing: border-box; 后，元素的宽度和高度将包括内容、内边距和边框。即使你设置了元素的宽度为 100px，这个宽度就包括了内边距和边框，
+  内容区域的宽度会自动调整，以便保持元素的总宽度为 100px。这样可以避免一些布局上的计算错误，使得布局更容易控制。*/
+  border-radius: 16px;
 }
 
 .input-box i {

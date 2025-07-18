@@ -43,8 +43,8 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
     const targetIndex: number = executorResult.attraction_details.findIndex(
       (detail: AttractionDetail) => detail.attraction === attractionName
     )
-    /*如果 executorResult 存在并且包含 attraction_details（景点详情），代码会在 attraction_details 数组中查找与 attractionName 匹配的景点名称。
-      findIndex() 方法返回匹配景点的索引。如果没有找到匹配的景点，targetIndex 将会是 -1
+    /*如果 executorResult 存在并且包含 attraction_details（景点详情），代码会在 attraction_details 数组中查找
+    与 attractionName 匹配的景点名称。findIndex() 方法返回匹配景点的索引。如果没有找到匹配的景点，targetIndex 将会是 -1
      */
 
     if (targetIndex !== -1) {
@@ -53,8 +53,7 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
         activeDetails.value.push(targetIndex)
       }
       /*如果找到了匹配的景点，代码会检查 activeDetails 数组（假设它用于管理折叠项的显示状态）是否已经包含该项的索引（targetIndex）。
-      如果没有，它会将该索引添加到 activeDetails.value 中，确保对应的折叠项会展开
-       */
+      如果没有，它会将该索引添加到 activeDetails.value 中，确保对应的折叠项会展开*/
 
       // 等待DOM更新后滚动
       setTimeout(() => {
@@ -77,7 +76,8 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
         document.querySelectorAll('.el-collapse-item') 获取所有折叠项（.el-collapse-item 是折叠项的类名）。
         然后，代码通过 Array.from(collapseItems) 将 NodeList 转换为数组，使用 find() 方法查找具有匹配标题的折叠项（标题与 attractionName 匹配）。
         item.querySelector('.el-collapse-item__header') 获取折叠项的标题元素，如果标题元素的文本内容与 attractionName 相符，则该折叠项就是目标项。
-        如果找到了目标项，就使用 scrollIntoView 方法将其平滑滚动到视口中，behavior: 'smooth' 表示滚动时使用平滑过渡效果，block: 'start' 表示滚动到元素的顶部，inline: 'nearest' 表示根据元素的位置选择最合适的滚动方式。
+        如果找到了目标项，就使用 scrollIntoView 方法将其平滑滚动到视口中，behavior: 'smooth' 表示滚动时使用平滑过渡效果，
+        block: 'start' 表示滚动到元素的顶部，inline: 'nearest' 表示根据元素的位置选择最合适的滚动方式。
        */
     }
   }
