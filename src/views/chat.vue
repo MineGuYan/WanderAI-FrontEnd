@@ -133,7 +133,6 @@ async function sendMessage() {
           } catch (e) {
             // 解析失败，可能是数据不完整，标记为需要累积更多数据
             isLargeJson = true;
-            continue;
           }
         } else {
           // 处理其他类型的数据
@@ -147,6 +146,10 @@ async function sendMessage() {
             } else if (data.type === "plan") {
               messages.value[messages.value.length - 1].aiText = `正在${data.content}中...`;
             } else if (data.type === "end") {
+              if (content) {
+                content += data.content;
+                messages.value[messages.value.length - 1].aiText = marked(content) as string;
+              }
               break;
             } else if (data.type === "error") {
               console.error(`对话出错: ${data.content}`);
