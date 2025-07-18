@@ -57,12 +57,14 @@ onMounted(() => {
 
     <p class="sub_title">作为你的智能伙伴，我既能生成旅行规划，还能陪你聊天、快跟我交流吧!</p>
 
-    <ul class="recommendation">
-      热门景点推荐
-      <li class="recommendation_img" v-for="hs in HotSpots">
-        <strong>{{ hs.name }}:</strong>>{{ hs.description }}
-      </li>
-    </ul>
+    <div class="recommendation">
+      <h3 class="recommendation-title">热门景点推荐</h3>
+      <div class="recommendation-list">
+        <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
+          <strong>{{ hs.name }}:</strong> {{ hs.description }}
+        </div>
+      </div>
+    </div>
 
     <!-- 蓝色框包含开始对话按钮 -->
     <div class="chat-box">
@@ -160,21 +162,82 @@ onMounted(() => {
 
 
 .recommendation{
-  padding: 0;
-  width: 100%;
+  max-width: 1200px;
+  margin: 15px auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
+  flex-direction: column;
+}
+
+.recommendation-title {
   color: #4beccc;
   font-size: 24px;
   text-align: center;
-  margin-top: 15px;
-  justify-content: center;
   font-weight: bold;
+  margin: 0 0 15px 0;
 }
 
-/* 蓝色框样式 */
+.recommendation-list {
+  width: 100%;
+  max-height: 400px;
+  max-width: 1200px;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.recommendation_hotspot {
+  color: #333;
+  font-size: 18px;
+  text-align: left;
+  padding: 15px 20px;
+  margin-bottom: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border-left: 4px solid #4beccc;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.recommendation_img:hover {
+  background-color: rgba(255, 255, 255, 0.95);
+  transform: translateX(5px);
+  box-shadow: 0 2px 10px rgba(75, 236, 204, 0.3);
+}
+
+.recommendation_img:last-child {
+  margin-bottom: 0;
+}
+
+/* 自定义滚动条样式 */
+.recommendation-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.recommendation-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.recommendation-list::-webkit-scrollbar-thumb {
+  background: rgba(75, 236, 204, 0.6);
+  border-radius: 3px;
+}
+
+.recommendation-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 236, 204, 0.8);
+}
+
 .chat-box {
-  margin: 300px 0 0 0;
-  padding: 10px;
+  position: fixed;
+  bottom: 14vh;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
 
@@ -215,18 +278,18 @@ onMounted(() => {
 
 .iconfont.icon-atm-fill {
   margin-top: 5px;
-  color: #94a3b8;
+  color: #818ea0;
   font-size: 26px;
   margin-right: 5px;
 }
 
 .teammate {
-  color: #94a3b8;
+  color: #73808e;
   font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0 0 0;
+  position: fixed;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
   z-index: 1000;
 }
@@ -242,7 +305,7 @@ onMounted(() => {
 .about-button {
   margin-left: 10px;
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #48c6f3;
   color: white;
   border-radius: 12px;
   text-decoration: none;
@@ -251,6 +314,7 @@ onMounted(() => {
 }
 
 .about-button:hover {
-  background-color: #0056b3;
+  color: #e6c022;
+  background-color: #0b60c0;
 }
 </style>
