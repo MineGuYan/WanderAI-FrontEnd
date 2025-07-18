@@ -212,6 +212,7 @@ async function createNewChat(){
   await createSession()
   await getHistoryChats()
   messages.value=[]
+  title.value = ''
 }
 
 function handleCommand(command: string) {
