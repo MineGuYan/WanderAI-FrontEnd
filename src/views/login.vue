@@ -229,6 +229,7 @@ input:focus {
   color: white;
   border: none;
   border-radius: 6px;
+  /*设置小手*/
   cursor: pointer;
   font-size: 18px;
   font-weight: 500;

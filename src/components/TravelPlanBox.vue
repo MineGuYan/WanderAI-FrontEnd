@@ -11,7 +11,15 @@ import {
   House,
   Food
 } from '@element-plus/icons-vue'
-import type {AttractionMap, ExecutorResult} from "../model/model.ts";
+import type {AttractionMap, ExecutorResult, AttractionDetail} from "../model/model.ts";
+
+/*AttractionDetail 接口包含以下属性：
+  attraction: string - 景点名称
+  address: string - 景点地址
+  coordinates: string - 景点坐标
+  introduction: string - 景点介绍
+*/
+
 
 const props = defineProps({
   travelPlan: {
@@ -20,7 +28,7 @@ const props = defineProps({
   }
 })
 
-const activeDetails = ref([])
+const activeDetails = ref<number[]>([])
 
 // 根据天数获取执行结果
 const getExecutorResult = (day: number) => {
@@ -33,20 +41,51 @@ const getMapUrl = (attractionName: string) => {
   return mapItem ? mapItem.static_map_url : null
 }
 
-// 滚动到指定的section
-async function scrollToContent(index: number) {
-  if (!(index in activeDetails.value)) {
-    activeDetails.value = [index as never]
-    setTimeout(() => {
-      const element = document.getElementById(`content-${index}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+// 点击景点标签滚动到对应详情
+const scrollToAttraction = (attractionName: string, dayNumber: number) => {
+  // 首先展开对应的折叠项
+  const executorResult = getExecutorResult(dayNumber)
+  /*通过 getExecutorResult(dayNumber) 获取某个特定天数（dayNumber）的执行结果。executorResult 是一个对象，包含了景点的详细信息*/
+  if (executorResult?.attraction_details) {
+    const targetIndex: number = executorResult.attraction_details.findIndex(
+      (detail: AttractionDetail) => detail.attraction === attractionName
+    )
+    /*如果 executorResult 存在并且包含 attraction_details（景点详情），代码会在 attraction_details 数组中查找与 attractionName 匹配的景点名称。
+      findIndex() 方法返回匹配景点的索引。如果没有找到匹配的景点，targetIndex 将会是 -1
+     */
+
+    if (targetIndex !== -1) {
+      // 确保该项在activeDetails中
+      if (!activeDetails.value.includes(targetIndex)) {
+        activeDetails.value.push(targetIndex)
       }
-    },350)
-  } else {
-    const element = document.getElementById(`content-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      /*如果找到了匹配的景点，代码会检查 activeDetails 数组（假设它用于管理折叠项的显示状态）是否已经包含该项的索引（targetIndex）。
+      如果没有，它会将该索引添加到 activeDetails.value 中，确保对应的折叠项会展开
+       */
+
+      // 等待DOM更新后滚动
+      setTimeout(() => {
+        // 使用更精确的选择器
+        const collapseItems = document.querySelectorAll('.el-collapse-item')
+        const targetItem = Array.from(collapseItems).find(item => {
+          const titleElement = item.querySelector('.el-collapse-item__header')
+          return titleElement && titleElement.textContent?.trim() === attractionName
+        })
+
+        if (targetItem) {
+          targetItem.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          })
+        }
+      }, 300)
+      /*使用 setTimeout 延迟 300 毫秒，等待 DOM 更新完成（因为我刚才通过修改 activeDetails 展开了折叠项，DOM 需要一些时间来更新）。
+        document.querySelectorAll('.el-collapse-item') 获取所有折叠项（.el-collapse-item 是折叠项的类名）。
+        然后，代码通过 Array.from(collapseItems) 将 NodeList 转换为数组，使用 find() 方法查找具有匹配标题的折叠项（标题与 attractionName 匹配）。
+        item.querySelector('.el-collapse-item__header') 获取折叠项的标题元素，如果标题元素的文本内容与 attractionName 相符，则该折叠项就是目标项。
+        如果找到了目标项，就使用 scrollIntoView 方法将其平滑滚动到视口中，behavior: 'smooth' 表示滚动时使用平滑过渡效果，block: 'start' 表示滚动到元素的顶部，inline: 'nearest' 表示根据元素的位置选择最合适的滚动方式。
+       */
     }
   }
 }
@@ -102,7 +141,7 @@ async function scrollToContent(index: number) {
                 :key="index"
                 type="info"
                 class="attraction-tag"
-                @click="scrollToContent(index)"
+                @click="scrollToAttraction(attraction, day.day)"
               >
                 {{ attraction }}
               </el-tag>
@@ -154,7 +193,7 @@ async function scrollToContent(index: number) {
                   :title="detail.attraction"
                   :name="index"
                 >
-                  <div class="detail-content" :id="'content-'+index">
+                  <div class="detail-content">
                     <p><span class="label">地址:</span> {{ detail.address }}</p>
                     <p><span class="label">坐标:</span> {{ detail.coordinates }}</p>
                     <p><span class="label">介绍:</span> {{ detail.introduction }}</p>
@@ -245,6 +284,7 @@ async function scrollToContent(index: number) {
   margin-right: 10px;
   margin-bottom: 10px;
   background-color: #8de3cd;
+  cursor: pointer;
 }
 
 .route-item {
@@ -277,7 +317,7 @@ async function scrollToContent(index: number) {
   color: #1fec7e;
 }
 /*当给 el-collapse-item 添加 class="place" 时，这个类确实被添加到了组件上，但实际显示标题的元素是组件内部的 .el-collapse-item__header 元素
-所以不应该用这种方法，可用:deep() 选择器，其允许样式穿透组件的封装，直接影响到组件内部的元素。
+所以不应该用这种方法，可用:deep() 选择器，其允许样式穿透组件的封装，直接影响���组件内部的元素。
  */
 
 .label {
