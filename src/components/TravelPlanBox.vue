@@ -9,17 +9,10 @@ import {
   Calendar,
   Lightning,
   House,
-  Food
+  Food,
+  Position
 } from '@element-plus/icons-vue'
 import type {AttractionMap, ExecutorResult, AttractionDetail} from "../model/model.ts";
-
-/*AttractionDetail 接口包含以下属性：
-  attraction: string - 景点名称
-  address: string - 景点地址
-  coordinates: string - 景点坐标
-  introduction: string - 景点介绍
-*/
-
 
 const props = defineProps({
   travelPlan: {
@@ -195,7 +188,8 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
                 >
                   <div class="detail-content">
                     <p><span class="label">地址:</span> {{ detail.address }}</p>
-                    <p><span class="label">坐标:</span> {{ detail.coordinates }}</p>
+<!--                    <p><span class="label">坐标:</span> {{ detail.coordinates }}</p>-->
+                    <p><span class="label">前往地图导航:</span> <a :href="`https://uri.amap.com/marker?position=${detail.coordinates}`" title="跳转到高德地图" target="_blank"><el-icon><Position /></el-icon></a></p>
                     <p><span class="label">介绍:</span> {{ detail.introduction }}</p>
                     <div class="map-container" v-if="getMapUrl(detail.attraction)">
                       <img :src="getMapUrl(detail.attraction)" alt="景点地图" class="map-image">
