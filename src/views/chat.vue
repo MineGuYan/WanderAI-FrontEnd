@@ -35,6 +35,7 @@ async function createSession() {
     })
   }
 
+  await getHistoryChats()
 }
 
 async function getHistoryChats() {
@@ -69,7 +70,7 @@ async function sendMessage() {
 
   const baseURL = api.defaults.baseURL || "";
   try {
-    chatting = true
+    chatting = true;
 
     const response = await fetch(`${baseURL}/chat/${sessionId}`, {
       method: "POST",
@@ -81,57 +82,101 @@ async function sendMessage() {
       body: JSON.stringify({
         message: messages.value[messages.value.length - 1].userText,
       })
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     // 处理流式响应
-    const reader = response.body?.getReader()
+    const reader = response.body?.getReader();
     if (!reader) {
-      throw new Error("无法获取响应流")
+      throw new Error("无法获取响应流");
     }
 
-    messages.value[messages.value.length - 1].isLoading = false
+    messages.value[messages.value.length - 1].isLoading = false;
 
-    const decoder = new TextDecoder()
-    let content = ''
+    const decoder = new TextDecoder();
+    let content = '';
+    let buffer = ''; // 用于累积可能被分割的JSON数据
+    let isLargeJson = false; // 标记是否正在处理大JSON数据
+
     while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
+      const { done, value } = await reader.read();
+      if (done) break;
 
-      const chunk = decoder.decode(value, { stream: true })
-      const lines = chunk.split("\n")
+      const chunk = decoder.decode(value, { stream: true });
+      buffer += chunk; // 累积数据
 
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = JSON.parse(line.slice(6)) as StreamResult;
+      // 处理缓冲区中的所有完整行
+      let lineEnd;
+      while ((lineEnd = buffer.indexOf('\n')) >= 0) {
+        const line = buffer.substring(0, lineEnd).trim();
+        buffer = buffer.substring(lineEnd + 1);
 
-          if (data.type === "chat") {
-            // 追加内容到AI消息
-            content+=data.content;
-            messages.value[messages.value.length - 1].aiText = marked(content) as string
-          } else if (data.type === "plan") {
-            messages.value[messages.value.length - 1].aiText = `正在${data.content}中...`
-          } else if (data.type === "all") {
-            messages.value[messages.value.length - 1].isLoading = false
-            messages.value[messages.value.length - 1].aiText = data.content as TravelPlan
-          } else if (data.type === "end") {
-            break
-          } else if (data.type === "error") {
-            console.error(`对话出错: ${data.content}`)
-            break
+        if (!line.startsWith("data: ")) continue;
+
+        const dataStr = line.slice(6);
+
+        // 如果是大JSON数据，可能需要累积多个chunk
+        if (isLargeJson || dataStr.includes('"type":"all"')) {
+          try {
+            // 尝试解析当前累积的数据
+            const data = JSON.parse(dataStr) as StreamResult;
+
+            if (data.type === "all") {
+              // 成功解析完整的大JSON数据
+              messages.value[messages.value.length - 1].isLoading = false;
+              messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
+              isLargeJson = false;
+            }
+          } catch (e) {
+            // 解析失败，可能是数据不完整，标记为需要累积更多数据
+            isLargeJson = true;
+            continue;
+          }
+        } else {
+          // 处理其他类型的数据
+          try {
+            const data = JSON.parse(dataStr) as StreamResult;
+
+            if (data.type === "chat") {
+              // 追加内容到AI消息
+              content += data.content;
+              messages.value[messages.value.length - 1].aiText = marked(content) as string;
+            } else if (data.type === "plan") {
+              messages.value[messages.value.length - 1].aiText = `正在${data.content}中...`;
+            } else if (data.type === "end") {
+              break;
+            } else if (data.type === "error") {
+              console.error(`对话出错: ${data.content}`);
+              break;
+            }
+          } catch (e) {
+            console.error("解析JSON失败:", e, "数据:", dataStr);
           }
         }
       }
     }
-  }catch (error){
-    console.error(error)
-    messages.value[messages.value.length - 1].isLoading = false
-    messages.value[messages.value.length - 1].aiText = '<span style="color: red;">服务器繁忙，请稍后再试。</span>'
-  }finally {
-    chatting = false
+
+    // 处理缓冲区中剩余的未处理数据
+    if (buffer.trim()) {
+      try {
+        const data = JSON.parse(buffer.trim()) as StreamResult;
+        if (data.type === "all") {
+          messages.value[messages.value.length - 1].isLoading = false;
+          messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
+        }
+      } catch (e) {
+        console.error("处理最后的数据块失败:", e);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    messages.value[messages.value.length - 1].isLoading = false;
+    messages.value[messages.value.length - 1].aiText = '<span style="color: red;">服务器繁忙，请稍后再试。</span>';
+  } finally {
+    chatting = false;
   }
 
   await getTitle()
@@ -154,6 +199,8 @@ async function getTitle() {
   } catch (error) {
     console.error('请求标题时发生错误:', error);
   }
+
+  await getHistoryChats()
 }
 
 async function getChatHistory(chat: HistoryChat) {
@@ -208,11 +255,10 @@ function handleShiftEnter() {
   // 允许换行
 }
 
-async function createNewChat(){
-  await createSession()
-  await getHistoryChats()
+function createNewChat(){
   messages.value=[]
   title.value = ''
+  sessionId = ''
 }
 
 function handleCommand(command: string) {
@@ -268,10 +314,12 @@ async function saveSettings() {
 
   if(nickname.value !== localStorage.getItem('nickname')) {
     try {
-      const response = await api.post('/user/nickname', {
-        nickname: nickname.value
+      const response = await api.put('/user/nickname',{} ,{
+        params:{
+          newNickname: nickname.value
+        }
       });
-      if (response.data.code === 200) {
+      if (response.data.code === 1) {
           localStorage.setItem('nickname', nickname.value);
           await ElMessageBox.alert('昵称已更新', '提示', {
             confirmButtonText: '确定',
@@ -293,6 +341,11 @@ async function saveSettings() {
         type: 'error'
       });
     }
+  } else {
+    await ElMessageBox.alert('昵称未修改，无需保存', '提示', {
+      confirmButtonText: '确定',
+      type: 'info'
+    });
   }
 }
 
@@ -311,11 +364,11 @@ async function confirmFeedback() {
   }
 
   try {
-    const response = await api.post('/suggession', {
+    const response = await api.post('/suggestion', {
       message: feedbackContent.value
     });
 
-    if (response.data.code === 200) {
+    if (response.data.code === 1) {
       await ElMessageBox.alert('感谢您的反馈！', '提示', {
         confirmButtonText: '确定',
         type: 'success'

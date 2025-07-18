@@ -1,5 +1,21 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 
+function checkJWT() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return
+  }
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const currentTime = Math.floor(Date.now());
+  if (payload.exp < currentTime) {
+    localStorage.removeItem('token');
+  }
+}
+
+onMounted(() => {
+  checkJWT()
+});
 </script>
 
 <template>
