@@ -6,11 +6,25 @@ function checkJWT() {
   if (!token) {
     return
   }
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  const currentTime = Math.floor(Date.now());
-  if (payload.exp < currentTime) {
+
+  const JWTsplit = token.split('.');
+
+  if(JWTsplit.length !== 3) {
+    localStorage.removeItem('token');
+    return;
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now());
+    if (payload.exp < currentTime) {
+      localStorage.removeItem('token');
+    }
+  } catch (error) {
+    console.error('Invalid JWT token:', error);
     localStorage.removeItem('token');
   }
+
 }
 
 onMounted(() => {
