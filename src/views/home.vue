@@ -71,6 +71,7 @@ onMounted(() => {
   <div class="home-container">
     <!-- 新增的更新公告文字 -->
     <p class="update-notice">
+<!--      实现了“彩虹文字”动态变色效果-->
       <span
         v-for="(char, index) in '漫游精灵，成为你旅途中的知心伙伴，带你探索每一个精彩瞬间'"
         :key="index"
