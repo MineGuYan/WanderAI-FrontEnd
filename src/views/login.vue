@@ -5,6 +5,7 @@ import { sha256 } from 'js-sha256'
 import {ElMessageBox} from "element-plus";
 // @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
+import router from "../router";
 
 const userid = ref('');
 const password = ref('');

@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import api from '../api/request.ts';
 import { sha256 } from 'js-sha256'
-import { ElMessageBox } from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 // @ts-ignore
 import AspectRatioBox from "../components/AspectRatioBox.vue";
 
@@ -78,11 +78,41 @@ async function register() {
     });
 
     if (response.data.code === 1) {
-      await ElMessageBox.alert('恭喜注册成功，请牢记账号！<br>您的账号为：<br>' + response.data.data.accountId, '提示', {
-        confirmButtonText: '确定',
-        type: 'success',
-        dangerouslyUseHTMLString: true
-      });
+      // await ElMessageBox.alert('恭喜注册成功，请牢记账号！<br>您的账号为：<br>' + response.data.data.accountId, '提示', {
+      //   confirmButtonText: '确定',
+      //   type: 'success',
+      //   dangerouslyUseHTMLString: true
+      // });
+      await ElMessageBox.confirm(
+        '恭喜注册成功，请牢记账号！<br>您的账号为：<br>' + response.data.data.accountId,
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '复制',
+          type: 'success',
+          showCancelButton: true,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+          dangerouslyUseHTMLString: true,
+          beforeClose: (action, instance, done) => {
+            if (action === 'cancel') {
+              // 点击复制按钮的逻辑
+              navigator.clipboard.writeText(response.data.data.accountId)
+                  .then(() => {
+                    ElMessage.success('账号已复制到剪贴板')
+                  })
+                  .catch(err => {
+                    ElMessage.error('复制失败，请手动复制')
+                    console.error('复制失败:', err)
+                  })
+              // 不自动关闭，让用户点击确定关闭
+            } else if (action === 'confirm') {
+              // 点击确定按钮，关闭弹窗
+              done()
+            }
+          }
+        }
+      )
       window.location.href = "/login";
     } else {
       await ElMessageBox.alert('注册失败，请稍后再试', '提示', {
