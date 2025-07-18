@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import api from '../api/request.ts'
 import type { HotSpot } from '../model/model.ts'
 import SafeImg from "../components/SafeImg.vue"
+import { Refresh } from '@element-plus/icons-vue'
 
 const colors = [
   '#7dd3c0', '#75d4c2', '#6dd5c4', '#65d6c6', '#5dd7c8', '#55d8ca',
@@ -23,10 +24,27 @@ function getCharColor(index: number) {
 
 async function getHotSpots() {
   try {
-    const response = await api.get("/hotspot")
+    const response = await api.get("/hotspot",{
+      params: {
+        refresh: false
+      }
+    })
     HotSpots.value = response.data.data as HotSpot[]
   } catch (error) {
     console.error("获取热门景点失败:", error)
+  }
+}
+
+async function refreshHotSpots() {
+  try {
+    const response = await api.get("/hotspot",{
+      params: {
+        refresh: true
+      }
+    })
+    HotSpots.value = response.data.data as HotSpot[]
+  } catch (error) {
+    console.error("刷新热门景点失败:", error)
   }
 }
 
@@ -64,10 +82,10 @@ onMounted(() => {
 
     <div class="recommendation">
       <h3 class="recommendation-title">热门景点推荐</h3>
+      <div @click="refreshHotSpots"><el-icon><Refresh /></el-icon></div>
       <div class="recommendation-list">
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
-<!--          <img :src="hs.image" alt="景点图片" v-if="hs.image" />-->
           <SafeImg :url="hs.image"></SafeImg>
         </div>
       </div>
