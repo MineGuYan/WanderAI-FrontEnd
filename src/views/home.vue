@@ -76,6 +76,7 @@ onMounted(() => {
     <div class="teammate">
       <span class="iconfont icon-atm-fill"></span>
       <span class="team">研发团队：捉虫大队</span>
+      <router-link to="/about" class="about-button">了解更多</router-link>
     </div>
   </div>
 </template>
@@ -235,5 +236,21 @@ onMounted(() => {
   display: inline-block;
   transition: color 0.01s ease;
   font-weight: 600;
+}
+
+/* 新增关于按钮样式 */
+.about-button {
+  margin-left: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.about-button:hover {
+  background-color: #0056b3;
 }
 </style>
