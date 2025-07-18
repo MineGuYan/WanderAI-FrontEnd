@@ -22,7 +22,7 @@ export interface HistoryMessage {
 export interface HotSpot {
   name: string,
   description: string,
-  // image: string
+  image: string
 }
 
 // 旅行规划相关类型定义

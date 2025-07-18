@@ -3,6 +3,7 @@ import "../assets/iconfont/iconfont.css"
 import { ref, onMounted, onUnmounted } from 'vue'
 import api from '../api/request.ts'
 import type { HotSpot } from '../model/model.ts'
+import SafeImg from "../components/SafeImg.vue"
 
 const colors = [
   '#7dd3c0', '#75d4c2', '#6dd5c4', '#65d6c6', '#5dd7c8', '#55d8ca',
@@ -21,8 +22,12 @@ function getCharColor(index: number) {
 }
 
 async function getHotSpots() {
-  const response = await api.get("/hotspot")
-  HotSpots.value = response.data.data as HotSpot[]
+  try {
+    const response = await api.get("/hotspot")
+    HotSpots.value = response.data.data as HotSpot[]
+  } catch (error) {
+    console.error("获取热门景点失败:", error)
+  }
 }
 
 onMounted(() => {
@@ -62,6 +67,8 @@ onMounted(() => {
       <div class="recommendation-list">
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
+<!--          <img :src="hs.image" alt="景点图片" v-if="hs.image" />-->
+          <SafeImg :url="hs.image"></SafeImg>
         </div>
       </div>
     </div>
