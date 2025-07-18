@@ -188,7 +188,6 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
                 >
                   <div class="detail-content">
                     <p><span class="label">地址:</span> {{ detail.address }}</p>
-<!--                    <p><span class="label">坐标:</span> {{ detail.coordinates }}</p>-->
                     <p><span class="label">前往地图导航:</span> <a :href="`https://uri.amap.com/marker?position=${detail.coordinates}`" title="跳转到高德地图" target="_blank"><el-icon><Position /></el-icon></a></p>
                     <p><span class="label">介绍:</span> {{ detail.introduction }}</p>
                     <div class="map-container" v-if="getMapUrl(detail.attraction)">

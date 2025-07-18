@@ -16,6 +16,7 @@ const colors = [
 const currentColorIndex = ref(0)
 const HotSpots = ref<HotSpot[]>([])
 const refreshing = ref(false)
+const scrollableDiv = ref<HTMLDivElement | null>(null);
 
 function getCharColor(index: number) {
   // 根据索引和当前颜色索引返回颜色，从左往右变换
@@ -37,6 +38,9 @@ async function getHotSpots() {
 }
 
 async function refreshHotSpots() {
+  if (scrollableDiv.value) {
+    scrollableDiv.value.scrollTop = 0;
+  }
   refreshing.value = true
   try {
     const response = await api.get("/hotspot",{
@@ -92,7 +96,8 @@ onMounted(() => {
           <span>点击换一批</span>
         </div>
       </div>
-      <div class="recommendation-list" v-loading="refreshing" :style="{ overflow: refreshing ? 'hidden' : 'auto' }">
+      <div class="recommendation-list" v-loading="refreshing" :style="{ overflow: refreshing ? 'hidden' : 'auto' }" ref="scrollableDiv">
+        <div ></div>
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
           <SafeImg :url="hs.image"></SafeImg>
