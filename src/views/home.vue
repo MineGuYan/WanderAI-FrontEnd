@@ -81,8 +81,13 @@ onMounted(() => {
     <p class="sub_title">作为你的智能伙伴，我既能生成旅行规划，还能陪你聊天、快跟我交流吧!</p>
 
     <div class="recommendation">
-      <h3 class="recommendation-title">热门景点推荐</h3>
-      <div @click="refreshHotSpots"><el-icon><Refresh /></el-icon></div>
+      <div class="recommendation-header">
+        <h3 class="recommendation-title">热门景点推荐</h3>
+        <div @click="refreshHotSpots" class="recommendation_refresh">
+          <el-icon class="refresh"><Refresh /></el-icon>
+          <span>点击换一批</span>
+        </div>
+      </div>
       <div class="recommendation-list">
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
@@ -198,12 +203,42 @@ onMounted(() => {
   flex-direction: column;
 }
 
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  position: relative;
+}
+
 .recommendation-title {
   color: #4beccc;
   font-size: 24px;
-  text-align: center;
   font-weight: bold;
-  margin: 0 0 15px 0;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.recommendation_refresh {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  color: #4beccc;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-left: auto;
+}
+
+.recommendation_refresh:hover {
+  color: #2a9d8f;
+  transform: scale(1.05);
+}
+
+.recommendation_refresh .refresh {
+  font-size: 18px;
 }
 
 .recommendation-list {
