@@ -29,7 +29,7 @@ async function createSession() {
     sessionId = response.data.data.sessionId
   } catch (error) {
     sessionId = ''
-    await ElMessageBox.alert('创建会话失败，请稍后再试', '提示', {
+    await ElMessageBox.alert('创建会话失败，请稍后再试', '��示', {
       confirmButtonText: '确定',
       type: 'error'
     })
@@ -125,7 +125,7 @@ async function sendMessage() {
             const data = JSON.parse(dataStr) as StreamResult;
 
             if (data.type === "all") {
-              // 成功解析完整的大JSON数据
+              // ���功解析完整的大JSON数据
               messages.value[messages.value.length - 1].isLoading = false;
               messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
               isLargeJson = false;
@@ -460,9 +460,6 @@ onMounted(() => {
       历史对话
       <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)">
         {{ chat.title || '未命名对话' }}
-<!--          <router-link :to="{ path: '/chat', query: { sessionId: chat.sessionId } }">-->
-<!--            {{ chat.title || '未命名对话' }}-->
-<!--          </router-link>-->
       </li>
     </ul>
     <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
@@ -870,28 +867,30 @@ hr{
 }
 
 .input-box {
+  z-index: 1000;
   text-align: center;
-  background-color: #ffffff;
+  background-color: transparent;
   position: fixed;
   bottom: 20px;
-  left: 53%;
+  left: 50%;
   transform: translateX(-50%);
-  width: 70%;
+  width: 66%;
 }
 
 textarea {
-  z-index:1000;
+  z-index: 1000;
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
   width: 90%;
   height: 100px;
-  padding: 10px;
-  padding-right: 60px;
-  border-radius: 5px;
+  margin: 0;
+  padding-left: 0;
+  box-sizing: border-box;
 }
 
 .input-box i {
+  z-index: 1000;
   position: absolute;
   bottom: 10px;
   right: 2px;
