@@ -29,7 +29,7 @@ async function createSession() {
     sessionId = response.data.data.sessionId
   } catch (error) {
     sessionId = ''
-    await ElMessageBox.alert('创建会话失败，请稍后再试', '提示', {
+    await ElMessageBox.alert('创建会话失败，请稍后再试', '��示', {
       confirmButtonText: '确定',
       type: 'error'
     })
@@ -125,7 +125,7 @@ async function sendMessage() {
             const data = JSON.parse(dataStr) as StreamResult;
 
             if (data.type === "all") {
-              // 成功解析完整的大JSON数据
+              // ���功解析完整的大JSON数据
               messages.value[messages.value.length - 1].isLoading = false;
               messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
               isLargeJson = false;
@@ -460,9 +460,6 @@ onMounted(() => {
       历史对话
       <li v-for="chat in historyChats" :key="chat.sessionId" @click="getChatHistory(chat)">
         {{ chat.title || '未命名对话' }}
-<!--          <router-link :to="{ path: '/chat', query: { sessionId: chat.sessionId } }">-->
-<!--            {{ chat.title || '未命名对话' }}-->
-<!--          </router-link>-->
       </li>
     </ul>
     <el-dropdown class="user-settingmenu" trigger="click" @command="handleCommand" title="个人信息及反馈">
@@ -610,7 +607,7 @@ i{
 .user-settingmenu {
   /*将元素的位置设为绝对定位，相对于其最近的定位父元素进行定位*/
   position: absolute;
-  top: 80vh;
+  top: 82vh;
   /*vh是视口高度的单位，即整个显示界面的高度共100vh*/
   left:50%;
   transform: translateX(-50%);
@@ -696,11 +693,68 @@ i{
 }
 
 .history-dialogue {
+  text-align: center;
   position: absolute;
-  top:20%;
-  left:50%;
-  transform:translateX(-50%);
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 15px 10px;
+  margin-bottom: 30px;
+  overflow-y: auto;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0bbaf1;
 }
+
+.history-dialogue li {
+  list-style: none;
+  padding: 8px 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  color: #333;
+}
+
+.history-dialogue li:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  transform: translateX(3px);
+}
+
+.history-dialogue li:last-child {
+  margin-bottom: 0;
+}
+
+/* 自定义滚动条样式 */
+.history-dialogue::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-dialogue::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.history-dialogue::-webkit-scrollbar-thumb {
+  background: rgba(0, 123, 255, 0.6);
+  border-radius: 3px;
+}
+
+.history-dialogue::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 123, 255, 0.8);
+}
+
 .open_sidebar .user-settingmenu{
   width:100%;
 }
@@ -723,7 +777,7 @@ i{
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20px;
+  bottom: 40px;
   text-decoration: none;
   display:flex;
    /*主轴对齐*/
@@ -870,28 +924,30 @@ hr{
 }
 
 .input-box {
+  z-index: 1000;
   text-align: center;
-  background-color: #ffffff;
+  background-color: transparent;
   position: fixed;
   bottom: 20px;
-  left: 53%;
+  left: 50%;
   transform: translateX(-50%);
-  width: 70%;
+  width: 66%;
 }
 
 textarea {
-  z-index:1000;
+  z-index: 1000;
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
   width: 90%;
   height: 100px;
-  padding: 10px;
-  padding-right: 60px;
-  border-radius: 5px;
+  margin: 0;
+  padding-left: 0;
+  box-sizing: border-box;
 }
 
 .input-box i {
+  z-index: 1000;
   position: absolute;
   bottom: 10px;
   right: 2px;
