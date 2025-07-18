@@ -1,4 +1,5 @@
 import axios from "axios"
+import {ElMessageBox} from "element-plus";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_API_BASE_URL
@@ -26,8 +27,14 @@ api.interceptors.response.use(
     (error) => {
         // Handle response errors here
         if (error.response && error.response.status === 401) {
-            // Handle unauthorized access, e.g., redirect to login
             console.error("Unauthorized access - redirecting to login")
+            ElMessageBox.alert('登录已过期，请重新登陆', '提示', {
+                confirmButtonText: '确定',
+                type: 'warning'
+            }).then(() => {
+                localStorage.removeItem('token')
+                window.location.href = '/login'
+            });
         }
         return Promise.reject(error)
     }
