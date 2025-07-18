@@ -713,8 +713,8 @@ i{
 
 .history-dialogue li {
   list-style: none;
-  padding: 8px 12px;
-  margin-top: 10px;
+  padding: 10px 12px;
+  margin-top: 12px;
   margin-bottom: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 6px;
