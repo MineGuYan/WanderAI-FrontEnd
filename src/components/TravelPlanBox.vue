@@ -245,7 +245,6 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  z-index: 1;
 }
 
 .card-header {
@@ -352,5 +351,9 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
   gap: 8px;
   margin-bottom: 8px;
   color: #409EFF;
+}
+
+:deep(.el-step__head) {
+  z-index: 0;
 }
 </style>
