@@ -492,13 +492,15 @@ onMounted(() => {
 
 
   <div class="chatting">
-    <div class="header-container">
-      <span class="iconfont icon-ai"></span>
-      <h1>漫游精灵——WanderAI</h1>
-    </div>
-    <p>你好，我是你的旅行规划助手！请问有什么可以帮助你的吗？</p>
-    <hr>
     <div v-if="title!==''" class="dialog_title">{{title}}</div>
+    <div v-else>
+      <div class="header-container">
+        <span class="iconfont icon-ai"></span>
+        <h1>漫游精灵——WanderAI</h1>
+      </div>
+      <p>你好，我是你的旅行规划助手！请问有什么可以帮助你的吗？</p>
+    </div>
+    <hr>
     <div v-for="message in messages">
       <div class="message-container user-message">
         <span class="bubble user-bubble">{{ message.userText }}</span>
