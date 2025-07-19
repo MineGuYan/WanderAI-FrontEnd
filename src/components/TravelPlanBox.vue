@@ -5,14 +5,20 @@ import {
   Location,
   Promotion,
   Van,
-  InfoFilled,
+  Flag,
   Calendar,
-  Lightning,
+  Memo,
   House,
   Food,
-  Position
+  Position,
+  Sunny,
+  MostlyCloudy,
+  PartlyCloudy,
+  Lightning,
+  Drizzling,
+  Pouring
 } from '@element-plus/icons-vue'
-import type {AttractionMap, ExecutorResult, AttractionDetail} from "../model/model.ts";
+import type {AttractionMap, ExecutorResult, AttractionDetail, DailySchedule} from "../model/model.ts";
 
 const props = defineProps({
   travelPlan: {
@@ -32,6 +38,29 @@ const getExecutorResult = (day: number) => {
 const getMapUrl = (attractionName: string) => {
   const mapItem = props.travelPlan.attraction_maps.find((item: AttractionMap) => item.attraction === attractionName)
   return mapItem ? mapItem.static_map_url : null
+}
+
+// 获取天气图标
+const getCurrentWeatherIcon = (weather: string) => {
+  const weatherMap: Record<string, any> = {
+    '晴': Sunny,
+    '多云': PartlyCloudy,
+    '阴': MostlyCloudy,
+    '雷阵雨': Lightning,
+    '小雨': Drizzling,
+    '中雨': Pouring,
+    '大雨': Pouring,
+    // 可以根据需要添加更多天气类型
+  }
+  return weatherMap[weather] || null
+}
+
+// 格式化日期
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return `${month}月${day}日`
 }
 
 // 点击景点标签滚动到对应详情
@@ -114,6 +143,60 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
             </div>
           </el-col>
         </el-row>
+      </div>
+    </el-card>
+
+    <br>
+
+    <!-- 未来几天的天气 -->
+    <el-card class="weathers-card" v-if="travelPlan.weather_vo">
+      <template #header>
+        <div class="card-header">
+          <h3>天气信息</h3>
+        </div>
+      </template>
+      <div class="weather-container">
+        <div class="current-weather">
+          <div>{{ formatDate(travelPlan.weather_vo.weathers[0].date) }}</div>
+          <div class="weather-icon">
+            <el-icon v-if="getCurrentWeatherIcon(travelPlan.weather_vo.weathers[0].day_weather)">
+              <component :is="getCurrentWeatherIcon(travelPlan.weather_vo.weathers[0].day_weather)" />
+            </el-icon>
+            <span class="weather-text">{{ travelPlan.weather_vo.weathers[0].day_weather }}</span>
+          </div>
+          <div class="temperature">
+            <span class="max-temp">{{ travelPlan.weather_vo.weathers[0].max_degree }}°C</span>
+            <span class="min-temp">/{{ travelPlan.weather_vo.weathers[0].min_degree }}°C</span>
+          </div>
+          <div class="location">
+            <el-icon><Location /></el-icon>
+            <span>{{ travelPlan.weather_vo.city }}</span>
+          </div>
+        </div>
+
+        <el-divider />
+
+        <div class="weather-forecast">
+          <h4>未来几天天气预报</h4>
+          <div class="forecast-list">
+            <div
+              v-for="(weather, index) in travelPlan.weather_vo.weathers.slice(1, 4)"
+              :key="index"
+              class="forecast-item"
+            >
+              <div class="forecast-date">{{ formatDate(weather.date) }}</div>
+              <div class="forecast-icon">
+                <el-icon v-if="getCurrentWeatherIcon(weather.day_weather)">
+                  <component :is="getCurrentWeatherIcon(weather.day_weather)" />
+                </el-icon>
+              </div>
+              <div class="forecast-temp">
+                {{ weather.max_degree }}° / {{ weather.min_degree }}°
+              </div>
+              <div class="forecast-weather">{{ weather.day_weather }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </el-card>
 
@@ -206,7 +289,7 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
                 </div>
               </template>
               <div class="remark-item">
-                <h4><el-icon><InfoFilled /></el-icon> 行程特色</h4>
+                <h4><el-icon><Flag /></el-icon> 行程特色</h4>
                 <p>{{ getExecutorResult(day.day)?.remark_cards.trip_feature }}</p>
               </div>
               <div class="remark-item">
@@ -214,7 +297,7 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
                 <p>{{ getExecutorResult(day.day)?.remark_cards.arrangement_description }}</p>
               </div>
               <div class="remark-item">
-                <h4><el-icon><Lightning /></el-icon> 旅行建议</h4>
+                <h4><el-icon><Memo /></el-icon> 旅行建议</h4>
                 <p>{{ getExecutorResult(day.day)?.remark_cards.travel_suggestion }}</p>
               </div>
               <div class="remark-item">
@@ -344,6 +427,97 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
   gap: 8px;
   margin-bottom: 8px;
   color: #409EFF;
+}
+
+.weathers-card {
+  margin-bottom: 20px;
+}
+
+.weather-container {
+  padding: 10px;
+}
+
+.current-weather {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.weather-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-icon .el-icon {
+  font-size: 28px;
+  color: #F7BA2A;
+}
+
+.weather-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.temperature {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.max-temp {
+  color: #F56C6C;
+}
+
+.min-temp {
+  color: #909399;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #606266;
+}
+
+.weather-forecast h4 {
+  margin-bottom: 10px;
+  color: #409EFF;
+}
+
+.forecast-list {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.forecast-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f5f7fa;
+}
+
+.forecast-date {
+  font-size: 14px;
+  color: #606266;
+  margin-bottom: 5px;
+}
+
+.forecast-icon .el-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.forecast-temp {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.forecast-weather {
+  font-size: 14px;
+  color: #606266;
 }
 
 :deep(.el-step__head) {

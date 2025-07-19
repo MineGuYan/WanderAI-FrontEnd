@@ -31,6 +31,7 @@ export interface TravelPlan {
   daily_schedules: DailySchedule[],
   executor_results: ExecutorResult[],
   attraction_maps: AttractionMap[],
+  weather_vo: WeatherVo,
 }
 
 export interface SummaryResult {
@@ -46,7 +47,7 @@ export interface OverView {
 
 export interface DailySchedule {
   day: number,
-  activities: string[]
+  attractions: string[]
 }
 
 export interface ExecutorResult {
@@ -82,4 +83,17 @@ export interface RemarkCards {
 export interface AttractionMap {
   attraction: string,
   static_map_url: string,
+}
+
+export interface WeatherVo {
+  province: string,
+  city: string,
+  weathers: Weather[],
+}
+
+export interface Weather {
+  date: string,
+  max_degree: string,
+  min_degree: string,
+  day_weather: string,
 }
