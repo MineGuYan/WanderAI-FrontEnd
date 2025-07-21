@@ -515,7 +515,7 @@ onMounted(() => {
 <!--        <span v-show="!message.isLoading" class="bubble ai-bubble" v-html="message.aiText" ></span>-->
         <span v-show="!message.isLoading" class="bubble ai-bubble">
           <span v-if="typeof message.aiText === 'string'" v-html="message.aiText"></span>
-          <travel-plan-box v-else :travel-plan="message.aiText as TravelPlan" />
+          <travel-plan-box class="travel-plan-box" v-else :travel-plan="message.aiText as TravelPlan" />
         </span>
       </div>
     </div>
@@ -859,6 +859,9 @@ hr{
 .ai-bubble :deep(p){
   margin-top: 0;
   margin-bottom: 0;
+}
+.travel-plan-box {
+  min-width: 920px;
 }
 
 .user-bubble {
