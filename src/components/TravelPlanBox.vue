@@ -18,7 +18,7 @@ import {
   Drizzling,
   Pouring
 } from '@element-plus/icons-vue'
-import type {AttractionMap, ExecutorResult, AttractionDetail, DailySchedule} from "../model/model.ts";
+import type {AttractionMap, ExecutorResult, AttractionDetail} from "../model/model.ts";
 
 const props = defineProps({
   travelPlan: {

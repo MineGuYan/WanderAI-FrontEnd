@@ -137,15 +137,15 @@ async function register() {
       <form class="form">
         <div class="form-group">
           <label for="username">昵称：</label>
-          <el-input class="input" type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required />
+          <el-input class="input" type="text" id="username" v-model="username" placeholder="请输入用户昵称..." required clearable/>
         </div>
         <div class="form-group">
           <label for="password1">密码：</label>
-          <el-input class="input" type="password" id="password1" v-model="password1" placeholder="请输入密码..." show-password required />
+          <el-input class="input" type="password" id="password1" v-model="password1" placeholder="请输入密码..." show-password required clearable/>
         </div>
         <div class="form-group">
           <label for="password2">确认密码：</label>
-          <el-input class="input" type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." show-password required />
+          <el-input class="input" type="password" id="password2" v-model="password2" placeholder="请再次输入密码..." show-password required clearable/>
         </div>
       </form>
       <div class="actions">

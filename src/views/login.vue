@@ -88,11 +88,11 @@ async function login() {
       <form class="form">
         <div class="form-group">
           <label for="userid">账号：</label>
-          <el-input class="input" type="text" id="userid" v-model="userid" placeholder="请输入账号..." required />
+          <el-input class="input" type="text" id="userid" v-model="userid" placeholder="请输入账号..." required clearable/>
         </div>
         <div class="form-group">
           <label for="password">密码：</label>
-          <el-input class="input" type="password" id="password" v-model="password" placeholder="请输入密码..." show-password required />
+          <el-input class="input" type="password" id="password" v-model="password" placeholder="请输入密码..." show-password required clearable/>
         </div>
       </form>
       <div class="actions">
