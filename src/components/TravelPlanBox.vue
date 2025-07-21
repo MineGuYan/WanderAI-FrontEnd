@@ -384,7 +384,10 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
 }
 
 .route-desc {
+  font-size: 14px;
   padding-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 14px;
 }
 
 .details-card :deep(.el-collapse-item__header) {
@@ -470,7 +473,7 @@ const scrollToAttraction = (attractionName: string, dayNumber: number) => {
 }
 
 .min-temp {
-  color: #909399;
+  color: #16a7d3;
 }
 
 .location {

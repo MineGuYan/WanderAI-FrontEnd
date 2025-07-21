@@ -254,7 +254,7 @@ onMounted(() => {
 .recommendation-list {
   width: 100%;
   max-height: 440px;
-  max-width: 1200px;
+  min-height: 300px;
   overflow-y: auto;
   padding: 10px 0;
 }
