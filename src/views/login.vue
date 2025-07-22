@@ -10,14 +10,14 @@ const userid = ref('');
 const password = ref('');
 
 watch(userid, (newValue) => {
-  if( newValue.length > 12) {
+  if( newValue.length > 6) {
 
   } else {
 
   }
 
-  if (newValue.length > 20) {
-    userid.value = newValue.slice(0, 20);
+  if (newValue.length > 10) {
+    userid.value = newValue.slice(0, 10);
     ElMessageBox.alert('账号不能超过20个字符', '提示', {
       confirmButtonText: '确定',
       type: 'warning'
