@@ -6,9 +6,18 @@ import { marked } from "marked";
 import { markedHighlight } from "marked-highlight"
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import type {HistoryChat, message, StreamResult, HistoryMessage, TravelPlan} from "../model/model.ts";
-import {ElMessageBox} from "element-plus";
+import type {
+  HistoryChat,
+  message,
+  StreamResult,
+  HistoryMessage,
+  TravelPlan,
+  ImageMessage,
+  AudioMessage, AudioStreamResult
+} from "../model/model.ts";
+import {ElMessage, ElMessageBox} from "element-plus";
 import TravelPlanBox from "../components/TravelPlanBox.vue";
+import SafeImg from "../components/SafeImg.vue";
 
 let sessionId: string = ''
 let chatting: boolean = false
@@ -22,6 +31,7 @@ const feedbackDialogVisible = ref(false);
 const nickname = ref(localStorage.getItem('nickname') || '未设置昵称');
 const accountId = ref(localStorage.getItem('accountId') || '未设置账号');
 const feedbackContent = ref('');
+const upload = ref<File | null>(null);
 
 async function createSession() {
   try{
@@ -52,26 +62,67 @@ async function getHistoryChats() {
   }
 }
 
-async function sendMessage() {
-  if (uerInput.value === '')return
-  if (chatting)return
+async function chat() {
+  if (chatting) {
+    ElMessage.warning("正在处理上一个对话，请稍后再试")
+    return
+  }
+  if (uerInput.value === '' && upload.value === null) {
+    ElMessage.warning("请输入消息或上传图片")
+    return
+  }
+
+  chatting = true
 
   if (sessionId === '') {
     await createSession()
   }
 
-  messages.value.push({
-    userText: uerInput.value,
-    isLoading: true,
-    aiText: ''
-  })
+  if (upload.value !== null) {
+    const url = await uploadImage()
+    if (!url) {
+      await ElMessageBox.alert('图片上传失败，请稍后再试', '提示', {
+        confirmButtonText: '确定',
+        type: 'error'
+      })
+      return
+    }
+    messages.value.push({
+      userType: 'image',
+      userMessage: {
+        image_url: url,
+        text: uerInput.value
+      } as ImageMessage,
+      isLoading: true,
+      aiType: 'audio',
+      aiMessage: {
+        audio_url: '',
+        text: ''
+      } as AudioMessage
+    })
+    uerInput.value = ''
+    upload.value = null;
 
-  uerInput.value = ''
+    await sendImageMessage()
+  } else {
+    messages.value.push({
+      userType: 'chat',
+      userMessage: uerInput.value,
+      isLoading: true,
+      aiType: 'chat',
+      aiMessage: ''
+    })
+    uerInput.value = ''
 
+    await sendMessage()
+  }
+
+  await getTitle()
+}
+
+async function sendMessage() {
   const baseURL = api.defaults.baseURL || "";
   try {
-    chatting = true;
-
     const response = await fetch(`${baseURL}/chat/${sessionId}`, {
       method: "POST",
       headers: {
@@ -80,7 +131,7 @@ async function sendMessage() {
         Accept: "text/event-stream",
       },
       body: JSON.stringify({
-        message: messages.value[messages.value.length - 1].userText,
+        message: messages.value[messages.value.length - 1].userMessage,
       })
     });
 
@@ -126,8 +177,8 @@ async function sendMessage() {
 
             if (data.type === "all") {
               // 功解析完整的大JSON数据
-              messages.value[messages.value.length - 1].isLoading = false;
-              messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
+              messages.value[messages.value.length - 1].aiType = 'plan';
+              messages.value[messages.value.length - 1].aiMessage = data.content as TravelPlan;
               isLargeJson = false;
             }
           } catch (e) {
@@ -142,13 +193,13 @@ async function sendMessage() {
             if (data.type === "chat") {
               // 追加内容到AI消息
               content += data.content;
-              messages.value[messages.value.length - 1].aiText = marked(content) as string;
+              messages.value[messages.value.length - 1].aiMessage = marked(content) as string;
             } else if (data.type === "plan") {
-              messages.value[messages.value.length - 1].aiText = `正在${data.content}中...`;
+              messages.value[messages.value.length - 1].aiMessage = `正在${data.content}中...`;
             } else if (data.type === "end") {
               if (content) {
                 content += data.content;
-                messages.value[messages.value.length - 1].aiText = marked(content) as string;
+                messages.value[messages.value.length - 1].aiMessage = marked(content) as string;
               }
               break;
             } else if (data.type === "error") {
@@ -167,8 +218,8 @@ async function sendMessage() {
       try {
         const data = JSON.parse(buffer.trim()) as StreamResult;
         if (data.type === "all") {
-          messages.value[messages.value.length - 1].isLoading = false;
-          messages.value[messages.value.length - 1].aiText = data.content as TravelPlan;
+          messages.value[messages.value.length - 1].aiType = 'plan';
+          messages.value[messages.value.length - 1].aiMessage = data.content as TravelPlan;
         }
       } catch (e) {
         console.error("处理最后的数据块失败:", e);
@@ -177,12 +228,77 @@ async function sendMessage() {
   } catch (error) {
     console.error(error);
     messages.value[messages.value.length - 1].isLoading = false;
-    messages.value[messages.value.length - 1].aiText = '<span style="color: red;">服务器繁忙，请稍后再试。</span>';
+    messages.value[messages.value.length - 1].aiMessage = '<span style="color: red;">服务器繁忙，请稍后再试。</span>';
   } finally {
     chatting = false;
   }
+}
 
-  await getTitle()
+async function sendImageMessage() {
+  const baseURL = api.defaults.baseURL || "";
+  try {
+    const response = await fetch(`${baseURL}/chat/guide/${sessionId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authentication": localStorage.getItem('token') as string,
+        Accept: "text/event-stream",
+      },
+      body: JSON.stringify({
+        imageUrl: (messages.value[messages.value.length - 1].userMessage as ImageMessage).image_url,
+        message: (messages.value[messages.value.length - 1].userMessage as ImageMessage).text
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // 处理流式响应
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error("无法获取响应流");
+    }
+
+    messages.value[messages.value.length - 1].isLoading = false;
+
+    const decoder = new TextDecoder()
+    let content = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      const chunk = decoder.decode(value, { stream: true })
+      const lines = chunk.split("\n")
+
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = JSON.parse(line.slice(6)) as AudioStreamResult;
+
+          if (data.type === "chat") {
+            content += data.content;
+            (messages.value[messages.value.length - 1].aiMessage as AudioMessage).text = marked(content) as string
+          } else if (data.type === "audio") {
+            (messages.value[messages.value.length - 1].aiMessage as AudioMessage).audio_url = data.content;
+          } else if (data.type === "end") {
+            content += data.content;
+            (messages.value[messages.value.length - 1].aiMessage as AudioMessage).text = marked(content) as string
+            break
+          } else {
+            console.error(`对话出错: ${data.content}`)
+            break
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    messages.value[messages.value.length - 1].isLoading = false;
+    messages.value[messages.value.length - 1].aiMessage = '<span style="color: red;">服务器繁忙，请稍后再试。</span>';
+  } finally {
+    chatting = false;
+  }
 }
 
 async function getTitle() {
@@ -220,16 +336,17 @@ async function getChatHistory(chat: HistoryChat) {
     const history = response.data.data as HistoryMessage[]
     if (history.length === 0) return
     for (const item of history) {
-      if (item.type === 'chat') {
-        messages.value[messages.value.length - 1].aiText = marked(item.message as string) as string
-      } else if (item.type === 'human') {
+      if (item.role === 'human') {
         messages.value.push({
-          userText: item.message as string,
+          userType: item.type as 'chat' | 'image',
+          userMessage: item.message as string | ImageMessage,
           isLoading: false,
-          aiText: ''
+          aiType: 'chat',
+          aiMessage: ''
         })
       } else {
-        messages.value[messages.value.length - 1].aiText = item.message as TravelPlan
+        messages.value[messages.value.length - 1].aiType = item.type as 'chat' | 'plan' | 'audio'
+        messages.value[messages.value.length - 1].aiMessage = item.message as string | TravelPlan | AudioMessage
       }
     }
   } catch (error) {
@@ -251,7 +368,7 @@ function hideSidebar() {
 
 function handleEnter(e: KeyboardEvent) {
   e.preventDefault();
-  sendMessage();
+  chat();
 }
 
 function handleShiftEnter() {
@@ -393,6 +510,31 @@ async function confirmFeedback() {
   }
 }
 
+async function uploadImage() {
+  try {
+    const response = await api.post("/upload", upload.value, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authentication": localStorage.getItem('token') as string
+      }
+    });
+
+    if (response.data.code === 1) {
+      return response.data.data
+    } else {
+      console.error('上传图片失败:', response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('上传图片失败:', error);
+    return null;
+  }
+}
+
+function handleExceed() {
+  ElMessage.warning('最多只能上传一张图片');
+}
+
 watch(nickname, (newValue) => {
   if (newValue.length > 20) {
     nickname.value = newValue.slice(0, 20);
@@ -506,16 +648,23 @@ onMounted(() => {
     <hr>
     <div v-for="message in messages">
       <div class="message-container user-message">
-        <span class="bubble user-bubble">{{ message.userText }}</span>
+        <span v-if="message.userType === 'chat'" class="bubble user-bubble">{{ message.userMessage }}</span>
+        <span v-else>
+          <SafeImg :url="(message.userMessage as ImageMessage).image_url"></SafeImg>
+          {{ (message.userMessage as ImageMessage).text }}
+        </span>
         <span class="avatar user-avatar">用户</span>
       </div>
       <div class="message-container ai-message">
         <span class="avatar ai-avatar">AI</span>
         <span v-show="message.isLoading" class="loading-spinner"></span>
-<!--        <span v-show="!message.isLoading" class="bubble ai-bubble" v-html="message.aiText" ></span>-->
         <span v-show="!message.isLoading" class="bubble ai-bubble">
-          <span v-if="typeof message.aiText === 'string'" v-html="message.aiText"></span>
-          <travel-plan-box class="travel-plan-box" v-else :travel-plan="message.aiText as TravelPlan" />
+          <span v-if="message.aiType === 'chat'" v-html="message.aiMessage"></span>
+          <travel-plan-box class="travel-plan-box" v-else-if="message.aiType === 'plan'" :travel-plan="message.aiMessage as TravelPlan" />
+          <span v-else>
+            <span v-html="(message.aiMessage as AudioMessage).text"></span>
+            <audio :src="(message.aiMessage as AudioMessage).audio_url" controls></audio>
+          </span>
         </span>
       </div>
     </div>
@@ -527,7 +676,15 @@ onMounted(() => {
               v-model="uerInput"
               @keydown.enter.exact="handleEnter"
               @keydown.shift.enter="handleShiftEnter"></textarea>
-    <i class="iconfont icon-jiantou2-copy-copy" @click="sendMessage()"></i>
+    <i class="iconfont icon-jiantou2-copy-copy" @click="chat()"></i>
+    <el-upload ref="upload" accept="image/*" :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+      <el-button type="primary">上传图片</el-button>
+      <template #tip>
+        <div class="el-upload__tip">
+          图片数量最多1张
+        </div>
+      </template>
+    </el-upload>
   </div>
 
   <!-- 账户设置对话框 -->

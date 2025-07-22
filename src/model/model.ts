@@ -1,12 +1,19 @@
 export interface message {
-  userText: string,
+  userType: "chat" | "image",
+  userMessage: string | ImageMessage,
   isLoading: boolean,
-  aiText: string | TravelPlan
+  aiType: "chat" | "plan" | "audio",
+  aiMessage: string | TravelPlan | AudioMessage,
 }
 
 export interface StreamResult {
   type: "chat" | "plan" | "all" | "end" | "error",
   content: string | TravelPlan
+}
+
+export interface AudioStreamResult {
+  type: "chat" | "error" | "end" | "audio",
+  content: string
 }
 
 export interface HistoryChat {
@@ -15,8 +22,19 @@ export interface HistoryChat {
 }
 
 export interface HistoryMessage {
-  type: "chat" | "plan" | "human",
-  message: string | TravelPlan
+  role: "ai" | "human",
+  type: "chat" | "plan" | "image" | "audio",
+  message: string | TravelPlan | ImageMessage | AudioMessage,
+}
+
+export interface ImageMessage {
+  image_url: string,
+  text: string,
+}
+
+export interface AudioMessage {
+  audio_url: string,
+  text: string,
 }
 
 export interface HotSpot {
