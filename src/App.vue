@@ -16,6 +16,12 @@ function checkJWT() {
 
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
+
+    if (!payload.accountId || payload.accountId !== localStorage.getItem('accountId')) {
+      localStorage.removeItem('token');
+      return;
+    }
+
     const currentTime = Math.floor(Date.now() / 1000);
     if (payload.exp < currentTime) {
       localStorage.removeItem('token');
