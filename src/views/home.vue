@@ -278,7 +278,6 @@ onMounted(() => {
 .recommendation_hotspot_image{
   width: 60%;
   height: 60%;
-  max-height: 420px;
   max-width: 640px;
   border-radius: 8px;
   margin-top: 10px;
@@ -308,7 +307,7 @@ onMounted(() => {
 
 .chat-box {
   position: fixed;
-  bottom: 7vh;
+  bottom: 6vh;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;

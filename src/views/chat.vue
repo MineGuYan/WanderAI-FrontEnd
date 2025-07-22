@@ -646,7 +646,6 @@ onMounted(() => {
     </router-link>
   </div>
 
-
   <div class="chatting">
     <div v-if="title!==''" class="dialog_title">{{title}}</div>
     <div v-else>
@@ -656,16 +655,19 @@ onMounted(() => {
       </div>
       <p>你好，我是你的旅行规划助手！请问有什么可以帮助你的吗？</p>
     </div>
+
     <hr>
+
     <div v-for="message in messages">
       <div class="message-container user-message">
         <span v-if="message.userType === 'chat'" class="bubble user-bubble">{{ message.userMessage }}</span>
         <span v-else class="bubble user-bubble">
-          <SafeImg :url="(message.userMessage as ImageMessage).image_url"></SafeImg>
-          {{ (message.userMessage as ImageMessage).text }}
+          <SafeImg :url="(message.userMessage as ImageMessage).image_url" class="show-image"></SafeImg>
+          <span class="output-message">{{ (message.userMessage as ImageMessage).text }}</span>
         </span>
         <span class="avatar user-avatar">用户</span>
       </div>
+
       <div class="message-container ai-message">
         <span class="avatar ai-avatar">AI</span>
         <span v-show="message.isLoading" class="loading-spinner"></span>
@@ -674,7 +676,7 @@ onMounted(() => {
           <travel-plan-box class="travel-plan-box" v-else-if="message.aiType === 'plan'" :travel-plan="message.aiMessage as TravelPlan" />
           <span v-else>
             <span v-html="(message.aiMessage as AudioMessage).text"></span>
-            <audio v-if="(message.aiMessage as AudioMessage).audio_url" :src="(message.aiMessage as AudioMessage).audio_url" controls></audio>
+            <audio v-if="(message.aiMessage as AudioMessage).audio_url" :src="(message.aiMessage as AudioMessage).audio_url " controls class="show-audio"></audio>
           </span>
         </span>
       </div>
@@ -1031,6 +1033,7 @@ hr{
 }
 
 .user-bubble {
+  max-width: 1000px;
   background-color: #bdf6e8;
   color: #090707;
   border-top-right-radius: 4px;
@@ -1082,6 +1085,19 @@ hr{
 }
 
 
+.user-message {
+  font-size: 18px;
+  justify-content: flex-end;
+}
+
+.user-message .show-image{
+  display: block;
+  max-width: 940px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom: 10px;
+}
+
 .message-container {
   display: flex;
   align-items: flex-start;
@@ -1089,9 +1105,14 @@ hr{
   margin-bottom: 30px;
 }
 
-.user-message {
-  font-size: 18px;
-  justify-content: flex-end;
+.message-container .show-audio{
+  display: block;
+}
+
+.message-container .output-message{
+  display: block;
+  text-align: left;
+  /*块级元素，独占一行，此时text-align: left才生效，因为，text-align只对块级元素的内容对齐方式有效*/
 }
 
 .ai-message {
