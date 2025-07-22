@@ -101,7 +101,7 @@ onMounted(() => {
         <div ></div>
         <div class="recommendation_hotspot" v-for="hs in HotSpots" :key="hs.name">
           <strong>{{ hs.name }}:</strong> {{ hs.description }}
-          <SafeImg :url="hs.image"></SafeImg>
+          <SafeImg :url="hs.image" class="recommendation_hotspot_image"></SafeImg>
         </div>
       </div>
     </div>
@@ -168,7 +168,7 @@ onMounted(() => {
 .update-notice {
   font-size: 32px;
   text-align: center;
-  margin: 25px 0 20px 0;
+  margin: 10px 0 10px 0;
   font-weight: 500;
 }
 
@@ -177,7 +177,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .iconfont.icon-ai {
@@ -197,14 +197,16 @@ onMounted(() => {
   color: #0e0b0b;
   font-size: 16px;
   text-align: center;
-  margin-top: 25px;
+  margin-top: 10px;
 }
 
 
 .recommendation{
   max-width: 1200px;
+  width: 90%;
+  height:50%;
   margin: 10px auto;
-  padding: 20px;
+  padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   backdrop-filter: blur(8px);
@@ -253,8 +255,8 @@ onMounted(() => {
 
 .recommendation-list {
   width: 100%;
-  max-height: 440px;
-  min-height: 300px;
+  max-height: 640px;
+  min-height: 600px;
   overflow-y: auto;
   padding: 10px 0;
 }
@@ -273,15 +275,16 @@ onMounted(() => {
   width: 100%;
   box-sizing: border-box;
 }
-
-.recommendation_img:hover {
-  background-color: rgba(255, 255, 255, 0.95);
-  transform: translateX(5px);
-  box-shadow: 0 2px 10px rgba(75, 236, 204, 0.3);
-}
-
-.recommendation_img:last-child {
-  margin-bottom: 0;
+.recommendation_hotspot_image{
+  width: 60%;
+  height: 60%;
+  max-height: 420px;
+  max-width: 640px;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block;/*块级元素，独占一行*/
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 自定义滚动条样式 */
@@ -305,7 +308,7 @@ onMounted(() => {
 
 .chat-box {
   position: fixed;
-  bottom: 14vh;
+  bottom: 7vh;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -357,7 +360,7 @@ onMounted(() => {
   color: #73808e;
   font-size: 20px;
   position: fixed;
-  bottom: 8vh;
+  bottom: 2vh;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;

@@ -15,6 +15,9 @@ import type {
   ImageMessage,
   AudioMessage, AudioStreamResult
 } from "../model/model.ts";
+import {
+  Link,
+} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from "element-plus";
 import TravelPlanBox from "../components/TravelPlanBox.vue";
 import SafeImg from "../components/SafeImg.vue";
@@ -675,16 +678,14 @@ onMounted(() => {
     <textarea placeholder=" 向AI助手发送信息..."
               v-model="uerInput"
               @keydown.enter.exact="handleEnter"
-              @keydown.shift.enter="handleShiftEnter"></textarea>
-    <i class="iconfont icon-jiantou2-copy-copy" @click="chat()"></i>
-    <el-upload ref="upload" accept="image/*" :limit="1" :on-exceed="handleExceed" :auto-upload="false">
-      <el-button type="primary">上传图片</el-button>
-      <template #tip>
-        <div class="el-upload__tip">
-          图片数量最多1张
-        </div>
-      </template>
-    </el-upload>
+              @keydown.shift.enter="handleShiftEnter">
+    </textarea>
+    <div class="input-controls">
+      <el-upload class="input-image" ref="upload" accept="image/*" :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+        <el-icon class="link_icon"><Link /></el-icon>
+      </el-upload>
+      <i class="iconfont icon-jiantou2-copy-copy" @click="chat()"></i>
+    </div>
   </div>
 
   <!-- 账户设置对话框 -->
@@ -1096,22 +1097,24 @@ hr{
 
 .input-box {
   z-index: 1000;
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
   background-color: transparent;
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 66%;
+  width: 64%;
 }
 
-textarea {
+.input-box textarea {
   z-index: 1000;
   border: 2px solid #2dbdea;
   font-size: 20px;
   resize: none;
-  width: 90%;
-  height: 100px;
+  flex: 1;
+  height: 110px;
   margin: 0;
   padding-left: 4px; /* 添加左内边距，相当于两个空格的宽度 */
   box-sizing: border-box;
@@ -1120,17 +1123,42 @@ textarea {
   border-radius: 16px;
 }
 
+.input-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  z-index: 1000;
+}
+
+.input-image {
+  z-index: 1000;
+}
+
 .input-box i {
   z-index: 1000;
-  position: absolute;
-  bottom: 10px;
-  right: 2px;
   font-size: 40px;
   cursor: pointer;
   color: #ffffff;
   background-color: #007bff;
   border-radius: 50%;
-  border-color: #007bff;
+}
+.input-box .link_icon{
+  font-size:36px;
 }
 
+/* 显示上传组件的文件列表，并让其向上显示 */
+.input-image :deep(.el-upload-list) {
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
 </style>
