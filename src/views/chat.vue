@@ -18,7 +18,7 @@ import type {
 import {
   Link,
 } from '@element-plus/icons-vue'
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox, type UploadUserFile} from "element-plus";
 import TravelPlanBox from "../components/TravelPlanBox.vue";
 import SafeImg from "../components/SafeImg.vue";
 
@@ -34,7 +34,7 @@ const feedbackDialogVisible = ref(false);
 const nickname = ref(localStorage.getItem('nickname') || '未设置昵称');
 const accountId = ref(localStorage.getItem('accountId') || '未设置账号');
 const feedbackContent = ref('');
-const upload = ref<File | null>(null);
+const fileList = ref<UploadUserFile[]>([])
 
 async function createSession() {
   try{
@@ -70,7 +70,7 @@ async function chat() {
     ElMessage.warning("正在处理上一个对话，请稍后再试")
     return
   }
-  if (uerInput.value === '' && upload.value === null) {
+  if (uerInput.value === '' && fileList.value.length === 0) {
     ElMessage.warning("请输入消息或上传图片")
     return
   }
@@ -81,7 +81,9 @@ async function chat() {
     await createSession()
   }
 
-  if (upload.value !== null) {
+  console.log(fileList.value)
+
+  if (fileList.value.length > 0) {
     const url = await uploadImage()
     if (!url) {
       await ElMessageBox.alert('图片上传失败，请稍后再试', '提示', {
@@ -104,7 +106,7 @@ async function chat() {
       } as AudioMessage
     })
     uerInput.value = ''
-    upload.value = null;
+    fileList.value = [];
 
     await sendImageMessage()
   } else {
@@ -349,7 +351,11 @@ async function getChatHistory(chat: HistoryChat) {
         })
       } else {
         messages.value[messages.value.length - 1].aiType = item.type as 'chat' | 'plan' | 'audio'
-        messages.value[messages.value.length - 1].aiMessage = item.message as string | TravelPlan | AudioMessage
+        if (item.type === 'chat'){
+          messages.value[messages.value.length - 1].aiMessage = marked(item.message as string) as string
+        } else {
+          messages.value[messages.value.length - 1].aiMessage = item.message as TravelPlan | AudioMessage
+        }
       }
     }
   } catch (error) {
@@ -515,7 +521,9 @@ async function confirmFeedback() {
 
 async function uploadImage() {
   try {
-    const response = await api.post("/upload", upload.value, {
+    const response = await api.post("/upload", {
+      file: fileList.value[0].raw
+    }, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Authentication": localStorage.getItem('token') as string
@@ -652,7 +660,7 @@ onMounted(() => {
     <div v-for="message in messages">
       <div class="message-container user-message">
         <span v-if="message.userType === 'chat'" class="bubble user-bubble">{{ message.userMessage }}</span>
-        <span v-else>
+        <span v-else class="bubble user-bubble">
           <SafeImg :url="(message.userMessage as ImageMessage).image_url"></SafeImg>
           {{ (message.userMessage as ImageMessage).text }}
         </span>
@@ -666,7 +674,7 @@ onMounted(() => {
           <travel-plan-box class="travel-plan-box" v-else-if="message.aiType === 'plan'" :travel-plan="message.aiMessage as TravelPlan" />
           <span v-else>
             <span v-html="(message.aiMessage as AudioMessage).text"></span>
-            <audio :src="(message.aiMessage as AudioMessage).audio_url" controls></audio>
+            <audio v-if="(message.aiMessage as AudioMessage).audio_url" :src="(message.aiMessage as AudioMessage).audio_url" controls></audio>
           </span>
         </span>
       </div>
@@ -681,7 +689,7 @@ onMounted(() => {
               @keydown.shift.enter="handleShiftEnter">
     </textarea>
     <div class="input-controls">
-      <el-upload class="input-image" ref="upload" accept="image/*" :limit="1" :on-exceed="handleExceed" :auto-upload="false">
+      <el-upload class="input-image" v-model:file-list="fileList" accept="image/*" :limit="1" :on-exceed="handleExceed" :auto-upload="false">
         <el-icon class="link_icon"><Link /></el-icon>
       </el-upload>
       <i class="iconfont icon-jiantou2-copy-copy" @click="chat()"></i>
