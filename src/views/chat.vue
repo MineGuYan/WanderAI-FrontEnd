@@ -1137,11 +1137,14 @@ hr{
   width: 64%;
 }
 
+textarea {
+  resize: none;
+}
+
 .input-box textarea {
   z-index: 1000;
   border: 2px solid #2dbdea;
   font-size: 20px;
-  resize: none;
   flex: 1;
   height: 110px;
   margin: 0;
