@@ -17,7 +17,7 @@ function checkJWT() {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
 
-    if (!payload.accountId || payload.accountId !== localStorage.getItem('accountId')) {
+    if (!payload.account_id || payload.account_id !== localStorage.getItem('accountId')) {
       localStorage.removeItem('token');
       return;
     }
