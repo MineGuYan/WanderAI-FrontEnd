@@ -1199,9 +1199,10 @@ textarea {
   margin-top:16px;
 }
 .textarea{
+  font-size:18px;
+  padding:10px;
   width: 100%;
   height: 200px;
-  font-size:16px;
 }
 .dialog-footer .cancel-button{
   height:36px;
