@@ -707,19 +707,19 @@ onMounted(() => {
   >
     <!-- 对话框内容 -->
     <div>
-      <p>昵称：</p>
+      <p><strong>昵称: </strong></p>
       <el-input v-model="nickname" placeholder="请输入昵称"></el-input>
     </div>
     <div>
-      <p>账号：</p>
+      <p class="account"><strong>账号：</strong></p>
       <el-input v-model="accountId" disabled></el-input>
     </div>
 
     <!-- 对话框底部按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="cancelSettings">取消</el-button>
-        <el-button type="primary" @click="saveSettings">保存</el-button>
+        <el-button class="cancel-button" @click="cancelSettings">取消</el-button>
+        <el-button class="save-button" type="primary" @click="saveSettings">保存</el-button>
       </span>
     </template>
   </el-dialog>
@@ -727,26 +727,28 @@ onMounted(() => {
   <!-- 意见反馈对话框 -->
   <el-dialog
     v-model="feedbackDialogVisible"
-    title="账户设置"
+    title="意见反馈"
     width="50%"
     :close-on-click-modal="false"
   >
     <!-- 对话框内容 -->
     <div>
-      <textarea placeholder="请输入反馈意见..." v-model="feedbackContent"></textarea>
+      <textarea class="textarea" placeholder="请输入反馈意见..." v-model="feedbackContent"></textarea>
     </div>
 
     <!-- 对话框底部按钮 -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="cancelFeedback">取消</el-button>
-        <el-button type="primary" @click="confirmFeedback">确定</el-button>
+        <el-button class="cancel-button" @click="cancelFeedback">取消</el-button>
+        <el-button class="confirm-button" type="primary" @click="confirmFeedback">确定</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <style scoped>
+
+
 * {
   margin: 0;
   padding: 0;
@@ -1192,5 +1194,25 @@ textarea {
   padding: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
+}
+.account{
+  margin-top:16px;
+}
+.textarea{
+  width: 100%;
+  height: 200px;
+  font-size:16px;
+}
+.dialog-footer .cancel-button{
+  height:36px;
+  width:50px;
+}
+.dialog-footer .confirm-button{
+  height:36px;
+  width:50px;
+}
+.dialog-footer .save-button{
+    height:36px;
+  width:50px;
 }
 </style>
